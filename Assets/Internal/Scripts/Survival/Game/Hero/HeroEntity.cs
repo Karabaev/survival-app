@@ -39,7 +39,7 @@ namespace Karabaev.Survival.Game.Hero
       if(direction.sqrMagnitude == 0)
         return;
 
-      var velocity = direction * Model.CurrentMoveSpeed;
+      var velocity = direction * Model.CurrentMoveSpeed * deltaTime;
       View.Move(new Vector3(velocity.x, 0.0f, velocity.y));
     }
 
