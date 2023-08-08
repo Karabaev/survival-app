@@ -2,7 +2,9 @@
 using JetBrains.Annotations;
 using Karabaev.GameKit.AppManagement;
 using Karabaev.GameKit.AppManagement.Contexts;
+using Karabaev.GameKit.Common.Utils;
 using Karabaev.GameKit.Entities;
+using Karabaev.Survival.Descriptors;
 using VContainer;
 using VContainer.Unity;
 
@@ -12,16 +14,22 @@ namespace Karabaev.Survival.Game
   public class GameApplicationState : ApplicationState<DummyStateContext>
   {
     private LifetimeScope _scope = null!;
+    private GameEntity _rootEntity = null!;
     
     public override async UniTask EnterAsync(DummyStateContext context)
     {
       await Resolve<SceneService>().OpenAsync("Game", () => _scope = CreateScope(ScopeRegistry.AppScope));
 
-      Resolve<EntitiesManager>().CreateEntity<GameEntity>(Resolver);
+      var descriptorsAccess = Resolve<DescriptorsAccess>();
+      var heroesRegistry = descriptorsAccess.HeroesRegistry;
+      var weaponsRegistry = descriptorsAccess.WeaponsRegistry;
+      _rootEntity = Resolve<EntitiesManager>().CreateEntity<GameEntity>(Resolver);
+      await _rootEntity.InitializeAsync(new GameEntity.Context(heroesRegistry.Heroes.PickRandom(), weaponsRegistry.Weapons.PickRandom()));
     }
 
     public override UniTask ExitAsync()
     {
+      _rootEntity.Dispose();
       _scope.Dispose();
       return UniTask.CompletedTask;
     }

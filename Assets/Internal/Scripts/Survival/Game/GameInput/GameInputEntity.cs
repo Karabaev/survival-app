@@ -1,6 +1,5 @@
 ﻿using Cysharp.Threading.Tasks;
 using JetBrains.Annotations;
-using Karabaev.GameKit.Common.Utils;
 using Karabaev.GameKit.Entities;
 using UnityEngine;
 
@@ -28,12 +27,8 @@ namespace Karabaev.Survival.Game.GameInput
 
     protected override GameInputModel CreateModel(Context context) => new();
 
-    protected override UniTask<GameInputView> CreateViewAsync(Context context)
-    {
-      var view = CommonUtils.NewObject<GameInputView>("Input", context.Parent);
-      return UniTask.FromResult(view);
-    }
+    protected override UniTask<GameInputView> CreateViewAsync(Context context) => UniTask.FromResult(context.ViewObject.AddComponent<GameInputView>());
 
-    public record Context(Transform Parent);
+    public record Context(GameObject ViewObject);
   }
 }

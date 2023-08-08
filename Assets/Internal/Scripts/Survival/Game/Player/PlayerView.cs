@@ -1,4 +1,4 @@
-using Karabaev.GameKit.Entities;
+﻿using Karabaev.GameKit.Entities;
 
 namespace Karabaev.Survival.Game.Player
 {

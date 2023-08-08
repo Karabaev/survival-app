@@ -46,7 +46,7 @@ namespace Karabaev.GameKit.Entities
       _initialized = true;
     }
 
-    void IDisposable.Dispose()
+    public void Dispose()
     {
       foreach(var disposable in _disposables)
         disposable.Dispose();

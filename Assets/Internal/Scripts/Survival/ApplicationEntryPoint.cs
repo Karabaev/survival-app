@@ -4,6 +4,7 @@ using Karabaev.GameKit.AppManagement.Contexts;
 using Karabaev.GameKit.Common.Utils;
 using Karabaev.GameKit.Entities;
 using Karabaev.GameKit.ForResources;
+using Karabaev.Survival.Descriptors;
 using Karabaev.Survival.Game;
 using Karabaev.UI;
 using UnityEngine;
@@ -14,10 +15,19 @@ namespace Karabaev.Survival
 {
   public class ApplicationEntryPoint : MonoBehaviour
   {
+    [SerializeField]
+    private bool _runApplication = true;
+    
     private LifetimeScope _appScope = null!;
 
-    private void Start()
+    private void Awake()
     {
+      if (!_runApplication) 
+      {
+        Destroy(this);
+        return;
+      }
+      
       Application.targetFrameRate = 120;
       DontDestroyOnLoad(this);
       _appScope = LifetimeScope.Create(ConfigureAppScope);
@@ -28,7 +38,13 @@ namespace Karabaev.Survival
       stateMachine.EnterAsync<ApplicationLoadingApplicationState, ScopeStateContext>(new ScopeStateContext(_appScope)).Forget();
     }
     
-    private void OnDestroy() => _appScope.Dispose();
+    private void OnDestroy()
+    {
+      if(!_runApplication)
+        return;
+      
+      _appScope.Dispose();
+    }
 
     private void ConfigureAppScope(IContainerBuilder builder)
     {
@@ -38,6 +54,7 @@ namespace Karabaev.Survival
       builder.Register<SceneService>(Lifetime.Singleton);
       builder.Register<UIService>(Lifetime.Singleton);
       builder.Register<EntitiesManager>(Lifetime.Singleton);
+      builder.Register<DescriptorsAccess>(Lifetime.Singleton);
       
       builder.Register<ApplicationLoadingApplicationState>(Lifetime.Transient);
       builder.Register<GameApplicationState>(Lifetime.Transient);

@@ -1,9 +1,11 @@
-﻿using System;
-using Cysharp.Threading.Tasks;
+﻿using Cysharp.Threading.Tasks;
 using JetBrains.Annotations;
+using Karabaev.GameKit.Common.Utils;
 using Karabaev.GameKit.Entities;
-using Karabaev.Survival.Game.GameInput;
+using Karabaev.Survival.Game.Hero;
 using Karabaev.Survival.Game.Player;
+using Karabaev.Survival.Game.Weapons;
+using UnityEngine;
 
 namespace Karabaev.Survival.Game
 {
@@ -12,24 +14,18 @@ namespace Karabaev.Survival.Game
   {
     protected override async UniTask OnCreatedAsync(Context context)
     {
-      await CreateChildAsync<GameInputEntity, GameInputEntity.Context>(new GameInputEntity.Context(View.transform));
-      await CreateChildAsync<PlayerEntity, PlayerEntity.Context>(new PlayerEntity.Context(View.transform));
+      var playerContext = new PlayerEntity.Context(View.transform, context.HeroDescriptor, context.WeaponDescriptor);
+      await CreateChildAsync<PlayerEntity, PlayerEntity.Context>(playerContext);
     }
 
-    protected override GameModel CreateModel(Context context)
-    {
-      throw new NotImplementedException();
-    }
+    protected override GameModel CreateModel(Context context) => new();
 
     protected override UniTask<GameView> CreateViewAsync(Context context)
     {
-      throw new NotImplementedException();
+      var view = CommonUtils.NewObject<GameView>("Game");
+      return UniTask.FromResult(view);
     }
 
-    public record Context();
+    public record Context(HeroDescriptor HeroDescriptor, WeaponDescriptor WeaponDescriptor);
   }
-
-  public class GameView : UnityView { }
-
-  public class GameModel { }
 }

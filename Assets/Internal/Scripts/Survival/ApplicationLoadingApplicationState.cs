@@ -4,6 +4,7 @@ using Karabaev.GameKit.AppManagement;
 using Karabaev.GameKit.AppManagement.Contexts;
 using Karabaev.GameKit.Common;
 using Karabaev.GameKit.ForResources;
+using Karabaev.Survival.Descriptors;
 using Karabaev.Survival.Game;
 using Karabaev.UI;
 
@@ -18,8 +19,9 @@ namespace Karabaev.Survival
       ServiceLocator.Resolver = context.ParentScope.Container;
 
       var fromResourceFactory = Resolve<FromResourceFactory>();
-      await Resolve<UIService>().InitializeAsync("UI/UI_MainCanvas", fromResourceFactory, ApplicationStateListener.ApplicationQuiteCancellation);
       await Resolve<SceneService>().OpenAsync("Bootstrap", context.ParentScope);
+      await Resolve<UIService>().InitializeAsync("UI/UI_MainCanvas", fromResourceFactory, ApplicationStateListener.ApplicationQuiteCancellation);
+      await Resolve<DescriptorsAccess>().InitializeAsync();
       await StateMachine.EnterAsync<GameApplicationState>();
     }
 
