@@ -8,24 +8,41 @@ namespace Karabaev.Survival.Game.GameInput
 {
   public class GameInputView : UnityView
   {
+    public bool Enabled
+    {
+      set
+      {
+        enabled = value;
+        MouseWheelAxis = 0.0f;
+      }
+    }
+
+    public Vector2 MainAxis { get; private set; }
+    
+    public float MouseWheelAxis { get; private set; }
+    
+    public Vector2 MousePosition => Input.mousePosition;
+
     public event Action<Vector2>? FireClicked;
 
-    public event Action<Vector2>? AxisChanged;
-
-    private Vector2 _axis;
+    public event Action<Vector2>? AuxMouseButtonDown;
+    
+    public event Action<Vector2>? AuxMouseButtonUp;
     
     private void Update()
     {
       if(Input.GetAxis("Fire1") != 0 && !IsPointerOverUI())
         FireClicked?.Invoke(Input.mousePosition);
 
-      var axis = new Vector2(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"));
+      MainAxis = new Vector2(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"));
+      MouseWheelAxis = Input.GetAxis("Mouse ScrollWheel");
+      
+      // todo change to axis
+      if(Input.GetMouseButtonDown(1) && !IsPointerOverUI())
+        AuxMouseButtonDown?.Invoke(Input.mousePosition);
 
-      if(axis != _axis)
-      {
-        AxisChanged?.Invoke(axis);
-        _axis = axis;
-      }
+      if(Input.GetMouseButtonUp(1))
+        AuxMouseButtonUp?.Invoke(Input.mousePosition);
     }
     
     private bool IsPointerOverUI()

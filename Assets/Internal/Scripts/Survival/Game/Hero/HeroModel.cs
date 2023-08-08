@@ -19,6 +19,8 @@ namespace Karabaev.Survival.Game.Hero
     public ReactiveTrigger<Vector2> FireFired { get; }
     
     public ReactiveTrigger ReloadFired { get; }
+    
+    public ReactiveProperty<Transform?> HeroObject { get; }
 
     public HeroModel(WeaponModel weapon, int maxHp, int currentHp, float moveSpeed, ReactiveTrigger<Vector2> fireFired, ReactiveTrigger reloadFired)
     {
@@ -29,6 +31,7 @@ namespace Karabaev.Survival.Game.Hero
       CurrentMoveSpeed = moveSpeed;
       FireFired = fireFired;
       ReloadFired = reloadFired;
+      HeroObject = new ReactiveProperty<Transform?>(null);
     }
   }
 }

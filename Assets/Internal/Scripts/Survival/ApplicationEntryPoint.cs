@@ -53,7 +53,7 @@ namespace Karabaev.Survival
       builder.Register<IResourceService, ResourceService>(Lifetime.Singleton);
       builder.Register<SceneService>(Lifetime.Singleton);
       builder.Register<UIService>(Lifetime.Singleton);
-      builder.Register<EntitiesManager>(Lifetime.Singleton);
+      builder.Register<EntitiesManager>(Lifetime.Singleton).AsSelf().AsImplementedInterfaces();
       builder.Register<DescriptorsAccess>(Lifetime.Singleton);
       
       builder.Register<ApplicationLoadingApplicationState>(Lifetime.Transient);

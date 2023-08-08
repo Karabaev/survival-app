@@ -2,10 +2,10 @@
 using JetBrains.Annotations;
 using Karabaev.GameKit.Common.Utils;
 using Karabaev.GameKit.Entities;
+using Karabaev.Survival.Game.GameCamera;
 using Karabaev.Survival.Game.Hero;
 using Karabaev.Survival.Game.Player;
 using Karabaev.Survival.Game.Weapons;
-using UnityEngine;
 
 namespace Karabaev.Survival.Game
 {
@@ -14,7 +14,7 @@ namespace Karabaev.Survival.Game
   {
     protected override async UniTask OnCreatedAsync(Context context)
     {
-      var playerContext = new PlayerEntity.Context(View.transform, context.HeroDescriptor, context.WeaponDescriptor);
+      var playerContext = new PlayerEntity.Context(View.transform, context.HeroDescriptor, context.WeaponDescriptor, context.CameraConfig);
       await CreateChildAsync<PlayerEntity, PlayerEntity.Context>(playerContext);
     }
 
@@ -26,6 +26,6 @@ namespace Karabaev.Survival.Game
       return UniTask.FromResult(view);
     }
 
-    public record Context(HeroDescriptor HeroDescriptor, WeaponDescriptor WeaponDescriptor);
+    public record Context(HeroDescriptor HeroDescriptor, WeaponDescriptor WeaponDescriptor, GameCameraConfig CameraConfig);
   }
 }

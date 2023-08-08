@@ -24,7 +24,8 @@ namespace Karabaev.Survival.Game
       var heroesRegistry = descriptorsAccess.HeroesRegistry;
       var weaponsRegistry = descriptorsAccess.WeaponsRegistry;
       _rootEntity = Resolve<EntitiesManager>().CreateEntity<GameEntity>(Resolver);
-      await _rootEntity.InitializeAsync(new GameEntity.Context(heroesRegistry.Heroes.PickRandom(), weaponsRegistry.Weapons.PickRandom()));
+      await _rootEntity.InitializeAsync(new GameEntity.Context(heroesRegistry.Heroes.PickRandom(), 
+        weaponsRegistry.Weapons.PickRandom(), descriptorsAccess.CameraConfig));
     }
 
     public override UniTask ExitAsync()

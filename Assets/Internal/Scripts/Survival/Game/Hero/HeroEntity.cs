@@ -13,6 +13,8 @@ namespace Karabaev.Survival.Game.Hero
   {
     protected override UniTask OnCreatedAsync(Context context)
     {
+      Model.HeroObject.Value = View.transform;
+      
       Model.CurrentHp.Changed += Model_OnCurrentHpChanged;
       Model.Weapon.Changed += Model_OnWeaponChanged;
       Model.Weapon.Value.CurrentMagazine.Changed += Model_OnWeaponMagazineChanged;
