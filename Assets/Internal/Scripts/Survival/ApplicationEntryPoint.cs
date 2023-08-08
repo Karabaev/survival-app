@@ -2,6 +2,7 @@ using Cysharp.Threading.Tasks;
 using Karabaev.GameKit.AppManagement;
 using Karabaev.GameKit.AppManagement.Contexts;
 using Karabaev.GameKit.Common.Utils;
+using Karabaev.GameKit.Entities;
 using Karabaev.GameKit.ForResources;
 using Karabaev.Survival.Game;
 using Karabaev.UI;
@@ -15,7 +16,6 @@ namespace Karabaev.Survival
   {
     private LifetimeScope _appScope = null!;
 
-    
     private void Start()
     {
       Application.targetFrameRate = 120;
@@ -37,6 +37,8 @@ namespace Karabaev.Survival
       builder.Register<IResourceService, ResourceService>(Lifetime.Singleton);
       builder.Register<SceneService>(Lifetime.Singleton);
       builder.Register<UIService>(Lifetime.Singleton);
+      builder.Register<EntitiesManager>(Lifetime.Singleton);
+      
       builder.Register<ApplicationLoadingApplicationState>(Lifetime.Transient);
       builder.Register<GameApplicationState>(Lifetime.Transient);
     }

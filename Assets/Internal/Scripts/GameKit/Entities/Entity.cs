@@ -1,13 +1,17 @@
 using System;
 using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
+using Karabaev.GameKit.Common;
 using UnityEngine;
 using VContainer;
 using VContainer.Unity;
 
 namespace Karabaev.GameKit.Entities
 {
-  public interface IEntity : ITickable, IDisposable { }
+  public interface IEntity : IDisposable
+  {
+    void Tick(float deltaTime, GameTime now);
+  }
   
   public interface IEntity<in TContext> : IEntity
   {
@@ -54,15 +58,15 @@ namespace Karabaev.GameKit.Entities
       OnDisposed();
     }
 
-    void ITickable.Tick()
+    void IEntity.Tick(float deltaTime, GameTime now)
     {
       if(!_initialized)
         return;
       
       foreach(var entity in Children)
-        entity.Tick();
+        entity.Tick(deltaTime, now);
       
-      OnTick(Time.deltaTime);
+      OnTick(deltaTime, now);
     }
 
     protected async UniTask<TChildEntity> CreateChildAsync<TChildEntity, TChildContext>(TChildContext context) where TChildEntity : IEntity<TChildContext>
@@ -86,7 +90,7 @@ namespace Karabaev.GameKit.Entities
 
     protected virtual UniTask OnCreatedAsync(TContext context) => UniTask.CompletedTask;
     
-    protected virtual void OnTick(float deltaTime) { }
+    protected virtual void OnTick(float deltaTime, GameTime now) { }
     
     protected virtual void OnDisposed() { }
 
