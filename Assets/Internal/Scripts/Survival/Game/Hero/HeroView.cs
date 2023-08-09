@@ -22,14 +22,9 @@ namespace Karabaev.Survival.Game.Hero
       set => transform.rotation = value;
     }
 
-    private Vector2 _velocity;
-    public Vector2 Velocity
+    public Vector2 AnimationVelocity
     {
-      set
-      {
-        _velocity = value;
-        _animationView.Velocity = value;
-      }
+      set => _animationView.Velocity = value;
     }
 
     private GameObject? _weaponInstance;
@@ -52,14 +47,6 @@ namespace Karabaev.Survival.Game.Hero
     public void Reload() => _animationView.Reload();
 
     public void Die() => _animationView.Die();
-
-    private void Update()
-    {
-      if(_velocity.sqrMagnitude == 0)
-        return;
-
-      _characterController.Move(new Vector3(_velocity.x, 0.0f, _velocity.y));
-    }
 
     private void OnValidate()
     {

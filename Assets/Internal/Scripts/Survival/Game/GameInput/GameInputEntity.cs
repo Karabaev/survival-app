@@ -15,8 +15,10 @@ namespace Karabaev.Survival.Game.GameInput
     protected override UniTask OnCreatedAsync(Context context)
     {
       View.FireClicked += View_OnFireClicked;
+      View.ReloadClicked += View_OnReloadClicked;
       View.AuxMouseButtonDown += View_OnAuxMouseButtonDown;
       View.AuxMouseButtonUp += View_OnAuxMouseButtonUp;
+      
       Model.Enabled.Changed += Model_OnEnabledChanged;
       
       Model_OnEnabledChanged(false, Model.Enabled.Value);
@@ -26,6 +28,7 @@ namespace Karabaev.Survival.Game.GameInput
     protected override void OnDisposed()
     {
       View.FireClicked -= View_OnFireClicked;
+      View.ReloadClicked -= View_OnReloadClicked;
       View.AuxMouseButtonDown -= View_OnAuxMouseButtonDown;
       View.AuxMouseButtonUp -= View_OnAuxMouseButtonUp;
       
@@ -41,7 +44,9 @@ namespace Karabaev.Survival.Game.GameInput
     }
 
     private void View_OnFireClicked(Vector2 mousePosition) => Model.FireFired.Set(mousePosition);
-    
+
+    private void View_OnReloadClicked() => Model.ReloadFired.Set();
+
     private void View_OnAuxMouseButtonDown(Vector2 mousePosition)
     {
       _auxDragging = true;
