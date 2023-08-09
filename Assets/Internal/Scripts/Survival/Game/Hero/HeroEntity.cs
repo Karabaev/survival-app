@@ -39,8 +39,13 @@ namespace Karabaev.Survival.Game.Hero
     protected override void OnTick(float deltaTime, GameTime now)
     {
       var direction = Model.MoveDirection.Value;
-      var velocity = direction * Model.CurrentMoveSpeed * deltaTime;
-      View.AnimationVelocity = direction * Model.CurrentMoveSpeed;
+      
+      var direction3D = new Vector3(direction.x, 0f, direction.y);
+      var forwardDirection = Vector3.Dot(View.Forward, direction3D);
+      var rightDirection = Vector3.Dot(View.Right, direction3D);
+      View.AnimationVelocity = new Vector2(rightDirection, forwardDirection);
+      
+      var velocity = direction.normalized * Model.CurrentMoveSpeed * deltaTime;
       View.Move(new Vector3(velocity.x, 0.0f, velocity.y));
 
       var lookDirection = Model.LookDirection.Value;

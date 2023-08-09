@@ -27,7 +27,14 @@ namespace Karabaev.Survival.Game.Hero
 
     public Vector3 Forward
     {
+      get => transform.forward;
       set => transform.forward = value;
+    }
+
+    public Vector3 Right
+    {
+      get => transform.right;
+      set => transform.right = value;
     }
     
     public Vector2 AnimationVelocity

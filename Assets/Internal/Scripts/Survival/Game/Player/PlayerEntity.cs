@@ -29,8 +29,7 @@ namespace Karabaev.Survival.Game.Player
 
     protected override void OnTick(float deltaTime, GameTime now)
     {
-      var axis = Model.Input.MainAxis;
-      Model.Hero.MoveDirection.Value = axis.normalized;
+      Model.Hero.MoveDirection.Value = Model.Input.MainAxis;
       Model.Hero.LookDirection.Value = CalculateHeroLookDirection();
     }
 
