@@ -30,9 +30,22 @@ namespace Karabaev.Survival.Game.Player
     protected override void OnTick(float deltaTime, GameTime now)
     {
       var axis = Model.Input.MainAxis;
-      Model.Hero.Direction.Value = axis.normalized;
+      Model.Hero.MoveDirection.Value = axis.normalized;
+      Model.Hero.LookDirection.Value = CalculateHeroLookDirection();
     }
 
+    private Vector2 CalculateHeroLookDirection()
+    {
+      var camera = Model.Camera.Camera.Value;
+      var cameraTransform = camera.transform;
+      var sin = Mathf.Sin(Mathf.Deg2Rad * cameraTransform.localRotation.eulerAngles.x);
+      var depth = cameraTransform.position.y / sin;
+      var mousePosition = Model.Input.MousePosition;
+      var mouseWorldPosition = camera.ScreenToWorldPoint(new Vector3(mousePosition.x, mousePosition.y, depth));
+      var lookDirection = MathUtils.Direction2D(Model.Hero.Position.Value, mouseWorldPosition);
+      return new Vector2(lookDirection.x, lookDirection.z);
+    }
+    
     protected override PlayerModel CreateModel(Context context) => context.Model;
 
     protected override UniTask<PlayerView> CreateViewAsync(Context context)

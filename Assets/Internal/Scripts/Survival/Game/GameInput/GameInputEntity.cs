@@ -40,6 +40,7 @@ namespace Karabaev.Survival.Game.GameInput
       Model.MouseWheelAxis = View.MouseWheelAxis;
       Model.MainAxis = View.MainAxis;
       Model.AuxMouseButtonDragAxis = _auxDragging ? View.MousePosition - _lastDragPosition : Vector2.zero;
+      Model.MousePosition = View.MousePosition;
       _lastDragPosition = View.MousePosition;
     }
 

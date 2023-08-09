@@ -2,7 +2,6 @@
 using JetBrains.Annotations;
 using Karabaev.GameKit.Common;
 using Karabaev.GameKit.Entities;
-using Karabaev.Survival.Game.Loot;
 using Karabaev.Survival.Game.Weapons;
 using UnityEngine;
 using Object = UnityEngine.Object;
@@ -20,7 +19,6 @@ namespace Karabaev.Survival.Game.Hero
       
       Model.CurrentHp.Changed += Model_OnCurrentHpChanged;
       Model.Weapon.Changed += Model_OnWeaponChanged;
-      Model.Weapon.Value.CurrentMagazine.Changed += Model_OnWeaponMagazineChanged;
       Model.FireFired.Triggered += Model_OnFireFired;
       Model.ReloadFired.Triggered += Model_OnReloadFired;
       return UniTask.CompletedTask;
@@ -32,7 +30,6 @@ namespace Karabaev.Survival.Game.Hero
 
       Model.CurrentHp.Changed -= Model_OnCurrentHpChanged;
       Model.Weapon.Changed -= Model_OnWeaponChanged;
-      Model.Weapon.Value.CurrentMagazine.Changed -= Model_OnWeaponMagazineChanged;
       Model.FireFired.Triggered -= Model_OnFireFired;
       Model.ReloadFired.Triggered -= Model_OnReloadFired;
     }
@@ -41,10 +38,15 @@ namespace Karabaev.Survival.Game.Hero
 
     protected override void OnTick(float deltaTime, GameTime now)
     {
-      var direction = Model.Direction.Value;
+      var direction = Model.MoveDirection.Value;
       var velocity = direction * Model.CurrentMoveSpeed * deltaTime;
       View.AnimationVelocity = direction * Model.CurrentMoveSpeed;
       View.Move(new Vector3(velocity.x, 0.0f, velocity.y));
+
+      var lookDirection = Model.LookDirection.Value;
+      View.Forward = new Vector3(lookDirection.x, 0.0f, lookDirection.y);
+      
+      Model.Position.Value = View.Position;
     }
 
     private void Model_OnCurrentHpChanged(int oldValue, int newValue)
@@ -56,11 +58,7 @@ namespace Karabaev.Survival.Game.Hero
     }
 
     private void Model_OnWeaponChanged(WeaponModel oldValue, WeaponModel newValue) => View.Weapon = newValue.Descriptor;
-
-    private void Model_OnWeaponMagazineChanged(int oldValue, int newValue)
-    {
-    }
-
+    
     private void Model_OnFireFired(Vector2 value)
     {
       View.Shot();

@@ -16,6 +16,7 @@ namespace Karabaev.Survival.Game.Hero
 
     public Vector3 Position
     {
+      get => transform.position;
       set => transform.position = value;
     }
     
@@ -24,6 +25,11 @@ namespace Karabaev.Survival.Game.Hero
       set => transform.rotation = value;
     }
 
+    public Vector3 Forward
+    {
+      set => transform.forward = value;
+    }
+    
     public Vector2 AnimationVelocity
     {
       set => _animationView.Velocity = value;
