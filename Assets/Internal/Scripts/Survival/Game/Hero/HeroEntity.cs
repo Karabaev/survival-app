@@ -2,6 +2,7 @@
 using JetBrains.Annotations;
 using Karabaev.GameKit.Common;
 using Karabaev.GameKit.Entities;
+using Karabaev.Survival.Game.Loot;
 using Karabaev.Survival.Game.Weapons;
 using UnityEngine;
 using Object = UnityEngine.Object;
@@ -15,6 +16,8 @@ namespace Karabaev.Survival.Game.Hero
     {
       Model.HeroObject.Value = View.transform;
       
+      View.LootContacted += View_OnLootContacted;
+      
       Model.CurrentHp.Changed += Model_OnCurrentHpChanged;
       Model.Weapon.Changed += Model_OnWeaponChanged;
       Model.Weapon.Value.CurrentMagazine.Changed += Model_OnWeaponMagazineChanged;
@@ -22,15 +25,19 @@ namespace Karabaev.Survival.Game.Hero
       Model.ReloadFired.Triggered += Model_OnReloadFired;
       return UniTask.CompletedTask;
     }
-    
+
     protected override void OnDisposed()
     {
+      View.LootContacted -= View_OnLootContacted;
+
       Model.CurrentHp.Changed -= Model_OnCurrentHpChanged;
       Model.Weapon.Changed -= Model_OnWeaponChanged;
       Model.Weapon.Value.CurrentMagazine.Changed -= Model_OnWeaponMagazineChanged;
       Model.FireFired.Triggered -= Model_OnFireFired;
       Model.ReloadFired.Triggered -= Model_OnReloadFired;
     }
+
+    private void View_OnLootContacted(string lootId) => Model.LootContactFired.Set(lootId);
 
     protected override void OnTick(float deltaTime, GameTime now)
     {

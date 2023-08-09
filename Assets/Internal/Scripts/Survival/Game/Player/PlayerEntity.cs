@@ -6,7 +6,6 @@ using Karabaev.GameKit.Entities;
 using Karabaev.Survival.Game.GameCamera;
 using Karabaev.Survival.Game.GameInput;
 using Karabaev.Survival.Game.Hero;
-using Karabaev.Survival.Game.Weapons;
 using UnityEngine;
 
 namespace Karabaev.Survival.Game.Player
@@ -34,15 +33,7 @@ namespace Karabaev.Survival.Game.Player
       Model.Hero.Direction.Value = axis.normalized;
     }
 
-    protected override PlayerModel CreateModel(Context context)
-    {
-      var heroDescriptor = context.HeroDescriptor;
-      var inputModel = new GameInputModel();
-      var weaponModel = new WeaponModel(context.WeaponDescriptor);
-      var heroModel = new HeroModel(weaponModel, heroDescriptor.MaxHp, heroDescriptor.MaxHp, heroDescriptor.MoveSpeed, inputModel.FireFired, inputModel.ReloadFired);
-      var cameraModel = new GameCameraModel(Vector3.zero, Vector3.zero, inputModel);
-      return new(inputModel, heroModel, cameraModel);
-    }
+    protected override PlayerModel CreateModel(Context context) => context.Model;
 
     protected override UniTask<PlayerView> CreateViewAsync(Context context)
     {
@@ -50,6 +41,6 @@ namespace Karabaev.Survival.Game.Player
       return UniTask.FromResult(view);
     }
 
-    public record Context(Transform Parent, HeroDescriptor HeroDescriptor, WeaponDescriptor WeaponDescriptor, GameCameraConfig CameraConfig);
+    public record Context(Transform Parent, PlayerModel Model, HeroDescriptor HeroDescriptor, GameCameraConfig CameraConfig);
   }
 }

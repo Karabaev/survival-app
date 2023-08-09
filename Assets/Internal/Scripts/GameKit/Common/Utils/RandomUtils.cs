@@ -8,6 +8,17 @@ namespace Karabaev.GameKit.Common.Utils
   [SuppressMessage("ReSharper", "PossibleMultipleEnumeration")]
   public static class RandomUtils
   {
+    private const string PossibleChars = "abcdefghijklmnopqrstuvwxyz0123456789";
+
+    public static string RandomString(int num = 10) {
+      var result = new char[num];
+      while(num-- > 0) {
+        result[num] = PossibleChars[UnityEngine.Random.Range(0, PossibleChars.Length)];
+      }
+    
+      return new string(result);
+    }
+    
     public static bool Random(float probability)
     {
       probability /= 100;

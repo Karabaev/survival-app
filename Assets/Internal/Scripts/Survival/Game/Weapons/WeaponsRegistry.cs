@@ -20,7 +20,7 @@ namespace Karabaev.Survival.Game.Weapons
     public string Id { get; private set; } = null!;
     
     [field: SerializeField]
-    public GameObject Prefab { get; private set; } = null!;
+    public GameObject EquippedPrefab { get; private set; } = null!;
 
     [field: SerializeField]
     public AnimatorOverrideController AnimatorController { get; private set; } = null!;
