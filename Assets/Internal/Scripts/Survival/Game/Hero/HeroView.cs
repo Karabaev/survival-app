@@ -37,7 +37,8 @@ namespace Karabaev.Survival.Game.Hero
         if(_weaponInstance != null)
           _weaponInstance.DestroyObject();
 
-        _weaponInstance = Instantiate(value.EquippedPrefab);
+        var slot = this.RequireComponentInChild<Transform>(value.SlotName);
+        _weaponInstance = Instantiate(value.EquippedPrefab, slot);
         _animationView.Controller = value.AnimatorController;
       }
     }
