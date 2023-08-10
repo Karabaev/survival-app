@@ -11,6 +11,8 @@ namespace Karabaev.Survival.Game.Weapons
     public Transform ProjectileSpawnPoint { get; private set; } = null!;
     [SerializeField, HideInInspector]
     private Transform _muzzle = null!;
+    [field: SerializeField, HideInInspector]
+    public AudioSource ShotAudioSource { get; private set; } = null!;
 
     private void Awake() => _muzzle.SetActive(false);
 
@@ -25,6 +27,7 @@ namespace Karabaev.Survival.Game.Weapons
     {
       ProjectileSpawnPoint = this.RequireComponentInChild<Transform>("ProjectileSpawnPoint");
       _muzzle = this.RequireComponentInChild<Transform>("Muzzle");
+      ShotAudioSource = this.RequireComponent<AudioSource>();
     }
   }
 }

@@ -1,5 +1,8 @@
+using System;
+using JetBrains.Annotations;
 using Karabaev.GameKit.Common.Utils;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 namespace Karabaev.Survival.Game.Hero
 {
@@ -31,6 +34,8 @@ namespace Karabaev.Survival.Game.Hero
       }
     }
 
+    public event Action? Step;
+
     public void RandomShot()
     {
       _animator.SetTrigger(ShotHash);
@@ -40,6 +45,15 @@ namespace Karabaev.Survival.Game.Hero
     public void Reload() => _animator.SetTrigger(ReloadHash);
     
     public void Die() => _animator.SetTrigger(DeadHash);
+
+    [UsedImplicitly]
+    public void OnStep(AnimationEvent animationEvent)
+    {
+      if(animationEvent.animatorClipInfo.weight < 0.5f)
+        return;
+
+      Step?.Invoke();
+    }
 
     private void OnValidate() => _animator = this.RequireComponentInChildren<Animator>();
   }

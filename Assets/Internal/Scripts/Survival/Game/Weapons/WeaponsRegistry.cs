@@ -36,6 +36,9 @@ namespace Karabaev.Survival.Game.Weapons
     
     [field: SerializeField]
     public float ReloadDuration { get; private set; }
+
+    [field: SerializeField]
+    public AudioClip ShotSound { get; private set; } = null!;
     
     [field: SerializeField]
     public GameObject ProjectilePrefab { get; private set; } = null!;

@@ -4,6 +4,7 @@ using Karabaev.GameKit.AppManagement.Contexts;
 using Karabaev.GameKit.Common.Utils;
 using Karabaev.GameKit.Entities;
 using Karabaev.GameKit.ForResources;
+using Karabaev.Survival.Audio;
 using Karabaev.Survival.Descriptors;
 using Karabaev.Survival.Game;
 using Karabaev.UI;
@@ -55,6 +56,7 @@ namespace Karabaev.Survival
       builder.Register<UIService>(Lifetime.Singleton);
       builder.Register<EntitiesManager>(Lifetime.Singleton).AsSelf().AsImplementedInterfaces();
       builder.Register<DescriptorsAccess>(Lifetime.Singleton);
+      builder.Register<AudioService>(Lifetime.Singleton);
       
       builder.Register<ApplicationLoadingApplicationState>(Lifetime.Transient);
       builder.Register<GameApplicationState>(Lifetime.Transient);

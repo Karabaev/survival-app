@@ -74,7 +74,6 @@ namespace Karabaev.Survival.Game.Hero
     private void Model_OnShootFired()
     {
       View.Shot();
-      Debug.Log("Shot"); // todokmo
     }
 
     protected override HeroModel CreateModel(Context context) => context.Model;
@@ -85,6 +84,8 @@ namespace Karabaev.Survival.Game.Hero
       view.name = "Hero";
       view.Position = Vector3.zero;
       view.Rotation = Quaternion.identity;
+      view.FootStepSounds = context.Descriptor.FootStepSounds;
+      Resolver.Inject(view);
       return UniTask.FromResult(view);
     }
 

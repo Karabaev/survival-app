@@ -24,5 +24,8 @@ namespace Karabaev.Survival.Game.Hero
     
     [field: SerializeField]
     public float MoveSpeed { get; private set; }
+
+    [field: SerializeField]
+    public AudioClip[] FootStepSounds { get; private set; } = null!;
   }
 }

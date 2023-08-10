@@ -51,7 +51,6 @@ namespace Karabaev.Survival.Game.Player
       
       if(_shooting && now >= _nextShootTime && currentWeapon.CurrentMagazine.Value > 0)
       {
-        Debug.Log("Try to shoot");
         Model.Hero.ShootFired.Set();
         currentWeapon.CurrentMagazine.Value--;
 
