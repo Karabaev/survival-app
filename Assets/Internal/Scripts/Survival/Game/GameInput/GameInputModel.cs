@@ -20,6 +20,12 @@ namespace Karabaev.Survival.Game.GameInput
     public ReactiveTrigger FireFired { get; }
 
     public ReactiveTrigger ReloadFired { get; }
+    
+    public ReactiveTrigger FirstWeaponButtonFired { get; }
+    
+    public ReactiveTrigger SecondWeaponButtonFired { get; }
+    
+    public ReactiveTrigger ThirdWeaponButtonFired { get; }
 
     public ReactiveProperty<bool> Enabled { get; }
 
@@ -33,6 +39,9 @@ namespace Karabaev.Survival.Game.GameInput
       FireButtonUpFired = new ReactiveTrigger();
       FireFired = new ReactiveTrigger();
       ReloadFired = new ReactiveTrigger();
+      FirstWeaponButtonFired = new ReactiveTrigger();
+      SecondWeaponButtonFired = new ReactiveTrigger();
+      ThirdWeaponButtonFired = new ReactiveTrigger();
       Enabled = new ReactiveProperty<bool>(true);
     }
   }

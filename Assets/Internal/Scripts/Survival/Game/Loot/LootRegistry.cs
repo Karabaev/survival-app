@@ -33,6 +33,6 @@ namespace Karabaev.Survival.Game.Loot
   {
     Weapon,
     Ammo,
-    Health
+    FirstAid
   }
 }

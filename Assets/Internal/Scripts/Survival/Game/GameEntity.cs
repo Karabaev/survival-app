@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Cysharp.Threading.Tasks;
 using JetBrains.Annotations;
@@ -10,8 +11,8 @@ using Karabaev.Survival.Game.Hero;
 using Karabaev.Survival.Game.Loot;
 using Karabaev.Survival.Game.Player;
 using Karabaev.Survival.Game.Weapons;
-using UnityEngine;
 using VContainer;
+using Object = UnityEngine.Object;
 
 namespace Karabaev.Survival.Game
 {
@@ -54,27 +55,15 @@ namespace Karabaev.Survival.Game
     private void Model_PlayerLootContactFired(string lootId)
     {
       var lootModel = Model.Loot.Collection.First(l => l.Id == lootId);
-      
-      switch(lootModel.Descriptor.Type)
-      {
-        case LootType.Weapon:
-        {
-          var weaponDescriptor = _descriptorsAccess.WeaponsRegistry.Weapons.First(w => w.Id == lootModel.Descriptor.ItemId);
-          Model.Player.Hero.Weapon.Value = new WeaponModel(weaponDescriptor, 0);
-          break;
-        }
-        case LootType.Ammo:
-        {
-          var weaponDescriptor = _descriptorsAccess.WeaponsRegistry.Weapons.First(w => w.Id == lootModel.Descriptor.ItemId);
-          Model.Player.Hero.Weapon.Value.ReserveAmmo.Value += weaponDescriptor.Magazine;
-          break;
-        }
-        case LootType.Health:
-          Model.Player.Hero.CurrentHp.Value += 100;
-          break;
-      }
 
-      Model.Loot.Remove(lootModel);
+      Action<LootModel> handler = lootModel.Descriptor.Type switch
+      {
+        LootType.Weapon => CollectWeaponLoot,
+        LootType.Ammo => CollectAmmoLoot,
+        LootType.FirstAid => CollectFirstAid,
+      };
+      
+      handler.Invoke(lootModel);
     }
 
     private async void Model_OnLootAdded(LootModel newItem, int index)
@@ -89,6 +78,45 @@ namespace Karabaev.Survival.Game
       DisposeChild(entity);
     }
 
+    private void CollectWeaponLoot(LootModel loot)
+    {
+      var weaponDescriptor = _descriptorsAccess.WeaponsRegistry.Weapons.First(w => w.Id == loot.Descriptor.ItemId);
+
+      var inventoryWeapons = Model.Player.Inventory.Weapons;
+      var foundWeapon = inventoryWeapons.Collection.FirstOrDefault(w => w.Descriptor.Id == weaponDescriptor.Id);
+
+      if(foundWeapon != null)
+      {
+        foundWeapon.ReserveAmmo.Value += weaponDescriptor.Magazine;
+      }
+      else
+      {
+        foundWeapon = new WeaponModel(weaponDescriptor, 0);
+        inventoryWeapons.Add(foundWeapon);
+      }
+
+      Model.Player.ActiveWeapon.Value = foundWeapon;
+      Model.Loot.Remove(loot);
+    }
+
+    private void CollectAmmoLoot(LootModel loot)
+    {
+      var weaponDescriptor = _descriptorsAccess.WeaponsRegistry.Weapons.First(w => w.Id == loot.Descriptor.ItemId);
+      var inventoryWeapon = Model.Player.Inventory.Weapons.Collection.FirstOrDefault(w => w.Descriptor.Id == weaponDescriptor.Id);
+
+      if(inventoryWeapon == null)
+        return;
+
+      inventoryWeapon.ReserveAmmo.Value += weaponDescriptor.Magazine;
+      Model.Loot.Remove(loot);
+    }
+
+    private void CollectFirstAid(LootModel loot)
+    {
+      Model.Player.Hero.CurrentHp.Value += 100;
+      Model.Loot.Remove(loot);
+    }
+    
     protected override GameModel CreateModel(Context context) => new(context.HeroDescriptor, context.WeaponDescriptor);
 
     protected override UniTask<GameView> CreateViewAsync(Context context)

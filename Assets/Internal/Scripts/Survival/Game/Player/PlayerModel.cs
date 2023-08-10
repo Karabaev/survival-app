@@ -13,21 +13,24 @@ namespace Karabaev.Survival.Game.Player
     
     public HeroModel Hero { get; }
     
-    public ReactiveProperty<WeaponModel> Weapon { get; }
+    public ReactiveProperty<WeaponModel> ActiveWeapon { get; }
 
     public GameCameraModel Camera { get; }
     
     public HUDModel HUD { get; }
 
+    public InventoryModel Inventory { get; }
+    
     public ReactiveTrigger<string> LootContactFired { get; }
 
     public PlayerModel(GameInputModel input, HeroDescriptor heroDescriptor, WeaponDescriptor weaponDescriptor, GameCameraModel camera)
     {
       LootContactFired = new ReactiveTrigger<string>();
-      Weapon = new ReactiveProperty<WeaponModel>(new WeaponModel(weaponDescriptor, 0));
-      Hero = new HeroModel(Weapon, heroDescriptor.MaxHp, heroDescriptor.MaxHp, heroDescriptor.MoveSpeed, LootContactFired);
-      HUD = new HUDModel(Hero.MaxHp, Hero.CurrentHp, Weapon);
+      ActiveWeapon = new ReactiveProperty<WeaponModel>(new WeaponModel(weaponDescriptor, 0));
+      Hero = new HeroModel(ActiveWeapon, heroDescriptor.MaxHp, heroDescriptor.MaxHp, heroDescriptor.MoveSpeed, LootContactFired);
+      HUD = new HUDModel(Hero.MaxHp, Hero.CurrentHp, ActiveWeapon);
       Camera = camera;
+      Inventory = new InventoryModel(ActiveWeapon.Value);
       Input = input;
     }
   }

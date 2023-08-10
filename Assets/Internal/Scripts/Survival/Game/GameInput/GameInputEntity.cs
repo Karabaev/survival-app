@@ -20,6 +20,9 @@ namespace Karabaev.Survival.Game.GameInput
       View.MainMouseButtonUp += View_OnMainMouseButtonUp;
       View.AuxMouseButtonDown += View_OnAuxMouseButtonDown;
       View.AuxMouseButtonUp += View_OnAuxMouseButtonUp;
+      View.FirstWeaponButtonClicked += ViewFirstWeaponButtonClicked;
+      View.SecondWeaponButtonClicked += ViewSecondWeaponButtonClicked;
+      View.ThirdWeaponButtonClicked += ViewThirdWeaponButtonClicked;
       
       Model.Enabled.Changed += Model_OnEnabledChanged;
       
@@ -35,6 +38,9 @@ namespace Karabaev.Survival.Game.GameInput
       View.MainMouseButtonUp -= View_OnMainMouseButtonUp;
       View.AuxMouseButtonDown -= View_OnAuxMouseButtonDown;
       View.AuxMouseButtonUp -= View_OnAuxMouseButtonUp;
+      View.FirstWeaponButtonClicked -= ViewFirstWeaponButtonClicked;
+      View.SecondWeaponButtonClicked -= ViewSecondWeaponButtonClicked;
+      View.ThirdWeaponButtonClicked -= ViewThirdWeaponButtonClicked;
       
       Model.Enabled.Changed -= Model_OnEnabledChanged;
     }
@@ -59,6 +65,12 @@ namespace Karabaev.Survival.Game.GameInput
     private void View_OnAuxMouseButtonDown(Vector2 mousePosition) => _auxDragging = true;
 
     private void View_OnAuxMouseButtonUp(Vector2 mousePosition) => _auxDragging = false;
+
+    private void ViewFirstWeaponButtonClicked() => Model.FirstWeaponButtonFired.Set();
+
+    private void ViewSecondWeaponButtonClicked() => Model.SecondWeaponButtonFired.Set();
+
+    private void ViewThirdWeaponButtonClicked() => Model.ThirdWeaponButtonFired.Set();
 
     private void Model_OnEnabledChanged(bool oldValue, bool newValue) => View.Enabled = newValue;
 

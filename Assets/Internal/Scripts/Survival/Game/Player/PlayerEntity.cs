@@ -31,7 +31,11 @@ namespace Karabaev.Survival.Game.Player
       Model.Input.FireButtonDownFired.Triggered += Model_OnFireButtonDownFired;
       Model.Input.FireButtonUpFired.Triggered += Model_OnFireButtonUpFired;
       Model.Input.ReloadFired.Triggered += Model_OnReloadFired;
-      Model.Weapon.Changed += Model_OnWeaponChanged;
+      Model.Input.FirstWeaponButtonFired.Triggered += Model_OnFirstWeaponButtonFired;
+      Model.Input.SecondWeaponButtonFired.Triggered += Model_OnSecondWeaponButtonFired;
+      Model.Input.ThirdWeaponButtonFired.Triggered += Model_OnThirdWeaponButtonFired;
+      
+      Model.ActiveWeapon.Changed += Model_OnActiveWeaponChanged;
     }
     
     protected override void OnDisposed()
@@ -39,6 +43,11 @@ namespace Karabaev.Survival.Game.Player
       Model.Input.FireButtonDownFired.Triggered -= Model_OnFireButtonDownFired;
       Model.Input.FireButtonUpFired.Triggered -= Model_OnFireButtonUpFired;
       Model.Input.ReloadFired.Triggered -= Model_OnReloadFired;
+      Model.Input.FirstWeaponButtonFired.Triggered -= Model_OnFirstWeaponButtonFired;
+      Model.Input.SecondWeaponButtonFired.Triggered -= Model_OnSecondWeaponButtonFired;
+      Model.Input.ThirdWeaponButtonFired.Triggered -= Model_OnThirdWeaponButtonFired;
+      
+      Model.ActiveWeapon.Changed -= Model_OnActiveWeaponChanged;
     }
 
     protected override void OnTick(float deltaTime, GameTime now)
@@ -49,7 +58,7 @@ namespace Karabaev.Survival.Game.Player
       if(_reloadFinishTime.HasValue)
         return;
 
-      var currentWeapon = Model.Weapon.Value;
+      var currentWeapon = Model.ActiveWeapon.Value;
       
       if(_shooting && now >= _nextShootTime && currentWeapon.CurrentMagazine.Value > 0)
       {
@@ -86,7 +95,7 @@ namespace Karabaev.Survival.Game.Player
     
     private void Model_OnReloadFired()
     {
-      var currentWeapon = Model.Weapon.Value;
+      var currentWeapon = Model.ActiveWeapon.Value;
       if(currentWeapon.ReserveAmmo.Value == 0 || currentWeapon.CurrentMagazine.Value == currentWeapon.Descriptor.Magazine)
         return;
       
@@ -94,7 +103,31 @@ namespace Karabaev.Survival.Game.Player
       _reloadFinishTime = GameTime.Now.AddSeconds(currentWeapon.Descriptor.ReloadDuration);
     }
 
-    private void Model_OnWeaponChanged(WeaponModel oldValue, WeaponModel newValue)
+    private void Model_OnFirstWeaponButtonFired()
+    {
+      if(Model.Inventory.Weapons.IsEmpty)
+        return;
+
+      Model.ActiveWeapon.Value = Model.Inventory.Weapons[0];
+    }
+
+    private void Model_OnSecondWeaponButtonFired()
+    {
+      if(Model.Inventory.Weapons.Count < 1)
+        return;
+
+      Model.ActiveWeapon.Value = Model.Inventory.Weapons[1];
+    }
+
+    private void Model_OnThirdWeaponButtonFired()
+    {
+      if(Model.Inventory.Weapons.Count < 3)
+        return;
+
+      Model.ActiveWeapon.Value = Model.Inventory.Weapons[2];
+    }
+    
+    private void Model_OnActiveWeaponChanged(WeaponModel oldValue, WeaponModel newValue)
     {
       _shooting = false;
       _reloadFinishTime = null;

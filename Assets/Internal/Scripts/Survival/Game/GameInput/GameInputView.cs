@@ -34,6 +34,12 @@ namespace Karabaev.Survival.Game.GameInput
     public event Action<Vector2>? AuxMouseButtonDown;
     
     public event Action<Vector2>? AuxMouseButtonUp;
+
+    public event Action? FirstWeaponButtonClicked;
+    
+    public event Action? SecondWeaponButtonClicked;
+    
+    public event Action? ThirdWeaponButtonClicked;
     
     private void Update()
     {
@@ -59,6 +65,15 @@ namespace Karabaev.Survival.Game.GameInput
 
       if(Input.GetMouseButtonUp(1))
         AuxMouseButtonUp?.Invoke(Input.mousePosition);
+
+      if(Input.GetKeyDown(KeyCode.Alpha1))
+        FirstWeaponButtonClicked?.Invoke();
+      
+      if(Input.GetKeyDown(KeyCode.Alpha2))
+        SecondWeaponButtonClicked?.Invoke();
+      
+      if(Input.GetKeyDown(KeyCode.Alpha3))
+        ThirdWeaponButtonClicked?.Invoke();
     }
     
     private bool IsPointerOverUI()
