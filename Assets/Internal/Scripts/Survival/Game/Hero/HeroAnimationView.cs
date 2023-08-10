@@ -16,6 +16,8 @@ namespace Karabaev.Survival.Game.Hero
     
     private static readonly int ReloadHash = Animator.StringToHash("Reload");
     private static readonly int DeadHash = Animator.StringToHash("Dead");
+    
+    private static readonly int DrawWeaponHash = Animator.StringToHash("DrawWeapon");
 
     [SerializeField, HideInInspector]
     private Animator _animator = null!;
@@ -45,6 +47,8 @@ namespace Karabaev.Survival.Game.Hero
     public void Reload() => _animator.SetTrigger(ReloadHash);
     
     public void Die() => _animator.SetTrigger(DeadHash);
+
+    public void DrawWeapon() => _animator.SetTrigger(DrawWeaponHash);
 
     [UsedImplicitly]
     public void OnStep(AnimationEvent animationEvent)

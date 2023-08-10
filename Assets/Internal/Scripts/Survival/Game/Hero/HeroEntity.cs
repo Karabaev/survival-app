@@ -64,17 +64,15 @@ namespace Karabaev.Survival.Game.Hero
       View.Die();
     }
 
-    private void Model_OnWeaponChanged(WeaponModel oldValue, WeaponModel newValue) => View.Weapon = newValue.Descriptor;
-
-    private void Model_OnReloadFired()
+    private void Model_OnWeaponChanged(WeaponModel oldValue, WeaponModel newValue)
     {
-      View.Reload();
+      View.DrawWeapon();
+      View.Weapon = newValue.Descriptor;
     }
 
-    private void Model_OnShootFired()
-    {
-      View.Shot();
-    }
+    private void Model_OnReloadFired() => View.Reload();
+
+    private void Model_OnShootFired() => View.Shot();
 
     protected override HeroModel CreateModel(Context context) => context.Model;
 

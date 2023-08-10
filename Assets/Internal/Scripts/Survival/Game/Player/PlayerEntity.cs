@@ -7,6 +7,7 @@ using Karabaev.Survival.Game.GameCamera;
 using Karabaev.Survival.Game.GameInput;
 using Karabaev.Survival.Game.Hero;
 using Karabaev.Survival.Game.HUD;
+using Karabaev.Survival.Game.Weapons;
 using UnityEngine;
 
 namespace Karabaev.Survival.Game.Player
@@ -30,6 +31,7 @@ namespace Karabaev.Survival.Game.Player
       Model.Input.FireButtonDownFired.Triggered += Model_OnFireButtonDownFired;
       Model.Input.FireButtonUpFired.Triggered += Model_OnFireButtonUpFired;
       Model.Input.ReloadFired.Triggered += Model_OnReloadFired;
+      Model.Weapon.Changed += Model_OnWeaponChanged;
     }
     
     protected override void OnDisposed()
@@ -92,6 +94,12 @@ namespace Karabaev.Survival.Game.Player
       _reloadFinishTime = GameTime.Now.AddSeconds(currentWeapon.Descriptor.ReloadDuration);
     }
 
+    private void Model_OnWeaponChanged(WeaponModel oldValue, WeaponModel newValue)
+    {
+      _shooting = false;
+      _reloadFinishTime = null;
+    }
+    
     private Vector2 CalculateHeroLookDirection()
     {
       var camera = Model.Camera.Camera.Value;
