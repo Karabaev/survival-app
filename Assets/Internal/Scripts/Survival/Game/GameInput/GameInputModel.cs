@@ -12,8 +12,12 @@ namespace Karabaev.Survival.Game.GameInput
     public float MouseWheelAxis { get; set; }
 
     public Vector2 MousePosition { get; set; }
+
+    public ReactiveTrigger FireButtonDownFired { get; }
     
-    public ReactiveTrigger<Vector2> FireFired { get; }
+    public ReactiveTrigger FireButtonUpFired { get; }
+
+    public ReactiveTrigger FireFired { get; }
 
     public ReactiveTrigger ReloadFired { get; }
 
@@ -25,7 +29,9 @@ namespace Karabaev.Survival.Game.GameInput
       AuxMouseButtonDragAxis = Vector2.zero;
       MouseWheelAxis = 0.0f;
       MousePosition = Vector2.zero;
-      FireFired = new ReactiveTrigger<Vector2>();
+      FireButtonDownFired = new ReactiveTrigger();
+      FireButtonUpFired = new ReactiveTrigger();
+      FireFired = new ReactiveTrigger();
       ReloadFired = new ReactiveTrigger();
       Enabled = new ReactiveProperty<bool>(true);
     }

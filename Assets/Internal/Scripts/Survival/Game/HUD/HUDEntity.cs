@@ -12,7 +12,8 @@ namespace Karabaev.Survival.Game.HUD
       View.SetAmmo(Model.Weapon.Value.CurrentMagazine.Value, Model.Weapon.Value.ReserveAmmo.Value);
 
       Model.Weapon.Changed += Model_OnWeaponChanged;
-      
+      Model.Weapon.Value.CurrentMagazine.Changed += Model_OnWeaponMagazineChanged;
+      Model.Weapon.Value.ReserveAmmo.Changed += Model_OnReserveAmmonChanged;
       return UniTask.CompletedTask;
     }
 
@@ -33,15 +34,9 @@ namespace Karabaev.Survival.Game.HUD
       View.SetAmmo(Model.Weapon.Value.CurrentMagazine.Value, Model.Weapon.Value.ReserveAmmo.Value);
     }
 
-    private void Model_OnWeaponMagazineChanged(int oldValue, int newValue)
-    {
-      View.SetAmmo(newValue, Model.Weapon.Value.ReserveAmmo.Value);
-    }
+    private void Model_OnWeaponMagazineChanged(int oldValue, int newValue) => View.SetAmmo(newValue, Model.Weapon.Value.ReserveAmmo.Value);
 
-    private void Model_OnReserveAmmonChanged(int oldValue, int newValue)
-    {
-      View.SetAmmo(Model.Weapon.Value.CurrentMagazine.Value, newValue);
-    }
+    private void Model_OnReserveAmmonChanged(int oldValue, int newValue) => View.SetAmmo(Model.Weapon.Value.CurrentMagazine.Value, newValue);
 
     protected override HUDModel CreateModel(Context context) => context.Model;
 

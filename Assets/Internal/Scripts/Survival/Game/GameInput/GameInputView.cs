@@ -23,10 +23,14 @@ namespace Karabaev.Survival.Game.GameInput
     
     public Vector2 MousePosition => Input.mousePosition;
 
-    public event Action<Vector2>? FireClicked;
+    public event Action? FireClicked;
     
     public event Action? ReloadClicked;
 
+    public event Action? MainMouseButtonDown;
+    
+    public event Action? MainMouseButtonUp;
+    
     public event Action<Vector2>? AuxMouseButtonDown;
     
     public event Action<Vector2>? AuxMouseButtonUp;
@@ -34,13 +38,20 @@ namespace Karabaev.Survival.Game.GameInput
     private void Update()
     {
       if(Input.GetAxis("Fire1") != 0 && !IsPointerOverUI())
-        FireClicked?.Invoke(Input.mousePosition);
+        FireClicked?.Invoke();
 
       if(Input.GetAxis("Reload") != 0 && !IsPointerOverUI())
         ReloadClicked?.Invoke();
 
       MainAxis = new Vector2(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"));
       MouseWheelAxis = Input.GetAxis("Mouse ScrollWheel");
+      
+      // todo change to axis
+      if(Input.GetMouseButtonDown(0) && !IsPointerOverUI())
+        MainMouseButtonDown?.Invoke();
+
+      if(Input.GetMouseButtonUp(0))
+        MainMouseButtonUp?.Invoke();
       
       // todo change to axis
       if(Input.GetMouseButtonDown(1) && !IsPointerOverUI())

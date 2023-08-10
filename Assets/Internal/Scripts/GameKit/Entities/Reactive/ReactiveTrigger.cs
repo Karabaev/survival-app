@@ -1,4 +1,6 @@
-﻿namespace Karabaev.GameKit.Entities.Reactive
+﻿using Cysharp.Threading.Tasks;
+
+namespace Karabaev.GameKit.Entities.Reactive
 {
   public class ReactiveTrigger
   {
@@ -16,5 +18,14 @@
     public event TriggeredHandler? Triggered;
 
     public void Set(T value) => Triggered?.Invoke(value);
+  }
+
+  public class AsyncReactiveTrigger
+  {
+    public delegate UniTask TriggeredHandler();
+    
+    public event TriggeredHandler? Triggered;
+    
+    public UniTask Set() => Triggered?.Invoke() ?? UniTask.CompletedTask;
   }
 }

@@ -32,6 +32,12 @@ namespace Karabaev.Survival.Game.Weapons
     public int Magazine { get; private set; }
     
     [field: SerializeField]
+    public float FireRate { get; private set; }
+    
+    [field: SerializeField]
+    public float ReloadDuration { get; private set; }
+    
+    [field: SerializeField]
     public GameObject ProjectilePrefab { get; private set; } = null!;
   }
 }

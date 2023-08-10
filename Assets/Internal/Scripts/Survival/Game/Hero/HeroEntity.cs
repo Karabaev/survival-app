@@ -19,8 +19,8 @@ namespace Karabaev.Survival.Game.Hero
       
       Model.CurrentHp.Changed += Model_OnCurrentHpChanged;
       Model.Weapon.Changed += Model_OnWeaponChanged;
-      Model.FireFired.Triggered += Model_OnFireFired;
       Model.ReloadFired.Triggered += Model_OnReloadFired;
+      Model.ShootFired.Triggered += Model_OnShootFired;
 
       Model_OnWeaponChanged(null!, Model.Weapon.Value);
       
@@ -33,11 +33,8 @@ namespace Karabaev.Survival.Game.Hero
 
       Model.CurrentHp.Changed -= Model_OnCurrentHpChanged;
       Model.Weapon.Changed -= Model_OnWeaponChanged;
-      Model.FireFired.Triggered -= Model_OnFireFired;
       Model.ReloadFired.Triggered -= Model_OnReloadFired;
     }
-
-    private void View_OnLootContacted(string lootId) => Model.LootContactFired.Set(lootId);
 
     protected override void OnTick(float deltaTime, GameTime now)
     {
@@ -57,6 +54,8 @@ namespace Karabaev.Survival.Game.Hero
       Model.Position.Value = View.Position;
     }
 
+    private void View_OnLootContacted(string lootId) => Model.LootContactFired.Set(lootId);
+
     private void Model_OnCurrentHpChanged(int oldValue, int newValue)
     {
       if(newValue > 0)
@@ -66,17 +65,18 @@ namespace Karabaev.Survival.Game.Hero
     }
 
     private void Model_OnWeaponChanged(WeaponModel oldValue, WeaponModel newValue) => View.Weapon = newValue.Descriptor;
-    
-    private void Model_OnFireFired(Vector2 value)
-    {
-      View.Shot();
-    }
 
     private void Model_OnReloadFired()
     {
       View.Reload();
     }
-    
+
+    private void Model_OnShootFired()
+    {
+      View.Shot();
+      Debug.Log("Shot"); // todokmo
+    }
+
     protected override HeroModel CreateModel(Context context) => context.Model;
 
     protected override UniTask<HeroView> CreateViewAsync(Context context)

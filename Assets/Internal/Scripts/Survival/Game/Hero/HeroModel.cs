@@ -20,7 +20,7 @@ namespace Karabaev.Survival.Game.Hero
     
     public float CurrentMoveSpeed { get; }
     
-    public ReactiveTrigger<Vector2> FireFired { get; }
+    public ReactiveTrigger ShootFired { get; }
     
     public ReactiveTrigger ReloadFired { get; }
     
@@ -28,19 +28,19 @@ namespace Karabaev.Survival.Game.Hero
 
     public ReactiveTrigger<string> LootContactFired { get; }
 
-    public HeroModel(WeaponModel weapon, int maxHp, int currentHp, float moveSpeed, ReactiveTrigger<Vector2> fireFired, ReactiveTrigger reloadFired)
+    public HeroModel(ReactiveProperty<WeaponModel> weapon, int maxHp, int currentHp, float moveSpeed, ReactiveTrigger<string> lootContactFired)
     {
       MoveDirection = new ReactiveProperty<Vector2>(Vector2.zero);
       LookDirection = new ReactiveProperty<Vector2>(Vector2.zero);
       Position = new ReactiveProperty<Vector3>(Vector3.zero);
-      Weapon = new ReactiveProperty<WeaponModel>(weapon);
+      Weapon = weapon;
       MaxHp = maxHp;
       CurrentHp = new ReactiveProperty<int>(currentHp);
       CurrentMoveSpeed = moveSpeed;
-      FireFired = fireFired;
-      ReloadFired = reloadFired;
+      ShootFired = new ReactiveTrigger();
+      ReloadFired = new ReactiveTrigger();
       HeroObject = new ReactiveProperty<Transform?>(null);
-      LootContactFired = new ReactiveTrigger<string>();
+      LootContactFired = lootContactFired;
     }
   }
 }

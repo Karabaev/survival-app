@@ -18,10 +18,8 @@ namespace Karabaev.Survival.Game
     public GameModel(HeroDescriptor heroDescriptor, WeaponDescriptor weaponDescriptor)
     {
       var input = new GameInputModel();
-      var weaponModel = new WeaponModel(weaponDescriptor, 0);
-      var hero = new HeroModel(weaponModel, heroDescriptor.MaxHp, heroDescriptor.MaxHp, heroDescriptor.MoveSpeed, input.FireFired, input.ReloadFired);
       var camera = new GameCameraModel(Vector3.zero, Vector3.zero, input);
-      Player = new PlayerModel(input, hero, camera);
+      Player = new PlayerModel(input, heroDescriptor, weaponDescriptor, camera);
       Loot = new ReactiveCollection<LootModel>();
     }
   }

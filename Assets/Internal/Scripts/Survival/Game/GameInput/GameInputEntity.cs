@@ -16,6 +16,8 @@ namespace Karabaev.Survival.Game.GameInput
     {
       View.FireClicked += View_OnFireClicked;
       View.ReloadClicked += View_OnReloadClicked;
+      View.MainMouseButtonDown += View_OnMainMouseButtonDown;
+      View.MainMouseButtonUp += View_OnMainMouseButtonUp;
       View.AuxMouseButtonDown += View_OnAuxMouseButtonDown;
       View.AuxMouseButtonUp += View_OnAuxMouseButtonUp;
       
@@ -24,11 +26,13 @@ namespace Karabaev.Survival.Game.GameInput
       Model_OnEnabledChanged(false, Model.Enabled.Value);
       return UniTask.CompletedTask;
     }
-
+    
     protected override void OnDisposed()
     {
       View.FireClicked -= View_OnFireClicked;
       View.ReloadClicked -= View_OnReloadClicked;
+      View.MainMouseButtonDown -= View_OnMainMouseButtonDown;
+      View.MainMouseButtonUp -= View_OnMainMouseButtonUp;
       View.AuxMouseButtonDown -= View_OnAuxMouseButtonDown;
       View.AuxMouseButtonUp -= View_OnAuxMouseButtonUp;
       
@@ -44,20 +48,18 @@ namespace Karabaev.Survival.Game.GameInput
       _lastDragPosition = View.MousePosition;
     }
 
-    private void View_OnFireClicked(Vector2 mousePosition) => Model.FireFired.Set(mousePosition);
+    private void View_OnFireClicked() => Model.FireFired.Set();
 
     private void View_OnReloadClicked() => Model.ReloadFired.Set();
 
-    private void View_OnAuxMouseButtonDown(Vector2 mousePosition)
-    {
-      _auxDragging = true;
-    }
+    private void View_OnMainMouseButtonDown() => Model.FireButtonDownFired.Set();
 
-    private void View_OnAuxMouseButtonUp(Vector2 mousePosition)
-    {
-      _auxDragging = false;
-    }
-    
+    private void View_OnMainMouseButtonUp() => Model.FireButtonUpFired.Set();
+
+    private void View_OnAuxMouseButtonDown(Vector2 mousePosition) => _auxDragging = true;
+
+    private void View_OnAuxMouseButtonUp(Vector2 mousePosition) => _auxDragging = false;
+
     private void Model_OnEnabledChanged(bool oldValue, bool newValue) => View.Enabled = newValue;
 
     protected override GameInputModel CreateModel(Context context) => context.Model;
