@@ -21,6 +21,9 @@ namespace Karabaev.Survival.Game.Hero
       Model.Weapon.Changed += Model_OnWeaponChanged;
       Model.FireFired.Triggered += Model_OnFireFired;
       Model.ReloadFired.Triggered += Model_OnReloadFired;
+
+      Model_OnWeaponChanged(null!, Model.Weapon.Value);
+      
       return UniTask.CompletedTask;
     }
 

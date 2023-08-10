@@ -2,6 +2,7 @@
 using Karabaev.Survival.Game.GameCamera;
 using Karabaev.Survival.Game.GameInput;
 using Karabaev.Survival.Game.Hero;
+using Karabaev.Survival.Game.HUD;
 
 namespace Karabaev.Survival.Game.Player
 {
@@ -12,6 +13,8 @@ namespace Karabaev.Survival.Game.Player
     public HeroModel Hero { get; }
     
     public GameCameraModel Camera { get; }
+    
+    public HUDModel HUD { get; }
 
     public ReactiveTrigger<string> LootContactFired { get; }
 
@@ -20,6 +23,7 @@ namespace Karabaev.Survival.Game.Player
       Input = input;
       Hero = hero;
       Camera = camera;
+      HUD = new HUDModel(Hero.MaxHp, Hero.CurrentHp, Hero.Weapon); // todokmo передавать Weapon
       LootContactFired = hero.LootContactFired;
     }
   }

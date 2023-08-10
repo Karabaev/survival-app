@@ -20,7 +20,7 @@ namespace Karabaev.Survival
 
       var fromResourceFactory = Resolve<FromResourceFactory>();
       await Resolve<SceneService>().OpenAsync("Bootstrap", context.ParentScope);
-      await Resolve<UIService>().InitializeAsync("UI/UI_MainCanvas", fromResourceFactory, ApplicationStateListener.ApplicationQuiteCancellation);
+      await Resolve<UIService>().InitializeAsync("UI/PF_MainCanvas", fromResourceFactory, ApplicationStateListener.ApplicationQuiteCancellation);
       await Resolve<DescriptorsAccess>().InitializeAsync();
       await StateMachine.EnterAsync<GameApplicationState>();
     }

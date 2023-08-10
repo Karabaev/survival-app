@@ -10,11 +10,11 @@ namespace Karabaev.Survival.Game.Weapons
     
     public ReactiveProperty<int> ReserveAmmo { get; }
 
-    public WeaponModel(WeaponDescriptor descriptor)
+    public WeaponModel(WeaponDescriptor descriptor, int reserveAmmo)
     {
       Descriptor = descriptor;
-      CurrentMagazine = new ReactiveProperty<int>(-1);
-      ReserveAmmo = new ReactiveProperty<int>(-1);
+      CurrentMagazine = new ReactiveProperty<int>(Descriptor.Magazine);
+      ReserveAmmo = new ReactiveProperty<int>(reserveAmmo);
     }
   }
 }

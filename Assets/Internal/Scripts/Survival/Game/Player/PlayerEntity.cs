@@ -6,6 +6,7 @@ using Karabaev.GameKit.Entities;
 using Karabaev.Survival.Game.GameCamera;
 using Karabaev.Survival.Game.GameInput;
 using Karabaev.Survival.Game.Hero;
+using Karabaev.Survival.Game.HUD;
 using UnityEngine;
 
 namespace Karabaev.Survival.Game.Player
@@ -19,12 +20,8 @@ namespace Karabaev.Survival.Game.Player
       var heroContext = new HeroEntity.Context(View.transform, Model.Hero, context.HeroDescriptor);
       await CreateChildAsync<HeroEntity, HeroEntity.Context>(heroContext);
       await CreateChildAsync<GameCameraEntity, GameCameraEntity.Context>(new GameCameraEntity.Context(View.transform, Model.Camera, context.CameraConfig));
-
+      await CreateChildAsync<HUDEntity, HUDEntity.Context>(new HUDEntity.Context(Model.HUD));
       Model.Camera.Target.Value = Model.Hero.HeroObject.Value;
-    }
-
-    protected override void OnDisposed()
-    {
     }
 
     protected override void OnTick(float deltaTime, GameTime now)

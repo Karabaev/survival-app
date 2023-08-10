@@ -59,7 +59,7 @@ namespace Karabaev.Survival.Game
       {
         case LootType.Weapon:
           var weaponDescriptor = _descriptorsAccess.WeaponsRegistry.Weapons.First(w => w.Id == lootModel.Descriptor.ItemId);
-          Model.Player.Hero.Weapon.Value = new WeaponModel(weaponDescriptor);
+          Model.Player.Hero.Weapon.Value = new WeaponModel(weaponDescriptor, 0);
           break;
         case LootType.Ammo:
           Model.Player.Hero.Weapon.Value.ReserveAmmo.Value += 30;
