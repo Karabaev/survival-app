@@ -42,7 +42,7 @@ namespace Karabaev.Survival.Game.Hero
       set => _animationView.Velocity = value;
     }
 
-    private GameObject? _weaponInstance;
+    private WeaponView? _weaponInstance;
     public WeaponDescriptor Weapon
     {
       set
@@ -60,7 +60,14 @@ namespace Karabaev.Survival.Game.Hero
     
     public void Move(Vector3 velocity) => _characterController.Move(velocity);
 
-    public void Shot() => _animationView.RandomShot();
+    public void Shot()
+    {
+      if(_weaponInstance == null)
+        return;
+      
+      _animationView.RandomShot();
+      _weaponInstance.PlayMuzzleAsync().Forget();
+    }
 
     public void Reload() => _animationView.Reload();
 
