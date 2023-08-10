@@ -50,7 +50,7 @@ namespace Karabaev.Survival.Game
       Model.Loot.ItemAdded -= Model_OnLootAdded;
       Model.Loot.ItemRemoved -= Model_OnLootRemoved;
     }
-
+  
     private void Model_PlayerLootContactFired(string lootId)
     {
       var lootModel = Model.Loot.Collection.First(l => l.Id == lootId);
@@ -58,12 +58,17 @@ namespace Karabaev.Survival.Game
       switch(lootModel.Descriptor.Type)
       {
         case LootType.Weapon:
+        {
           var weaponDescriptor = _descriptorsAccess.WeaponsRegistry.Weapons.First(w => w.Id == lootModel.Descriptor.ItemId);
           Model.Player.Hero.Weapon.Value = new WeaponModel(weaponDescriptor, 0);
           break;
+        }
         case LootType.Ammo:
-          Model.Player.Hero.Weapon.Value.ReserveAmmo.Value += 30;
+        {
+          var weaponDescriptor = _descriptorsAccess.WeaponsRegistry.Weapons.First(w => w.Id == lootModel.Descriptor.ItemId);
+          Model.Player.Hero.Weapon.Value.ReserveAmmo.Value += weaponDescriptor.Magazine;
           break;
+        }
         case LootType.Health:
           Model.Player.Hero.CurrentHp.Value += 100;
           break;
