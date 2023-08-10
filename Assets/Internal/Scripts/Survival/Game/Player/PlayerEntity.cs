@@ -55,12 +55,9 @@ namespace Karabaev.Survival.Game.Player
       Model.Hero.MoveDirection.Value = Model.Input.MainAxis;
       Model.Hero.LookDirection.Value = CalculateHeroLookDirection();
 
-      if(_reloadFinishTime.HasValue)
-        return;
-
       var currentWeapon = Model.ActiveWeapon.Value;
       
-      if(_shooting && now >= _nextShootTime && currentWeapon.CurrentMagazine.Value > 0)
+      if(_shooting && now >= _nextShootTime && currentWeapon.CurrentMagazine.Value > 0 && !_reloadFinishTime.HasValue)
       {
         Model.Hero.ShootFired.Set();
         currentWeapon.CurrentMagazine.Value--;
@@ -70,7 +67,7 @@ namespace Karabaev.Survival.Game.Player
         _nextShootTime = now.AddSeconds(cooldown);
       }
 
-      if(_reloadFinishTime >= now)
+      if(now >= _reloadFinishTime)
       {
         var ammoToMagazine = currentWeapon.Descriptor.Magazine - currentWeapon.CurrentMagazine.Value;
 
@@ -95,6 +92,9 @@ namespace Karabaev.Survival.Game.Player
     
     private void Model_OnReloadFired()
     {
+      if(_reloadFinishTime.HasValue)
+        return;
+      
       var currentWeapon = Model.ActiveWeapon.Value;
       if(currentWeapon.ReserveAmmo.Value == 0 || currentWeapon.CurrentMagazine.Value == currentWeapon.Descriptor.Magazine)
         return;
