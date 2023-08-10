@@ -28,9 +28,9 @@ namespace Karabaev.Survival.Game.Player
       LootContactFired = new ReactiveTrigger<string>();
       ActiveWeapon = new ReactiveProperty<WeaponModel>(new WeaponModel(weaponDescriptor, 0));
       Hero = new HeroModel(ActiveWeapon, heroDescriptor.MaxHp, heroDescriptor.MaxHp, heroDescriptor.MoveSpeed, LootContactFired);
-      HUD = new HUDModel(Hero.MaxHp, Hero.CurrentHp, ActiveWeapon);
-      Camera = camera;
       Inventory = new InventoryModel(ActiveWeapon.Value);
+      HUD = new HUDModel(Hero.MaxHp, Hero.CurrentHp, ActiveWeapon, Inventory);
+      Camera = camera;
       Input = input;
     }
   }

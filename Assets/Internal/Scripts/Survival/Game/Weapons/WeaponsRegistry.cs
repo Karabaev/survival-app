@@ -18,6 +18,9 @@ namespace Karabaev.Survival.Game.Weapons
   {
     [field: SerializeField]
     public string Id { get; private set; } = null!;
+
+    [field: SerializeField]
+    public Sprite Icon { get; private set; } = null!;
     
     [field: SerializeField]
     public WeaponView EquippedPrefab { get; private set; } = null!;

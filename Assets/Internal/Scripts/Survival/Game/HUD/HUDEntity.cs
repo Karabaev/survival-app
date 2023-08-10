@@ -8,35 +8,65 @@ namespace Karabaev.Survival.Game.HUD
   {
     protected override UniTask OnCreatedAsync(Context context)
     {
-      View.SetHp(Model.CurrentHp.Value, Model.MaxHp);
-      View.SetAmmo(Model.Weapon.Value.CurrentMagazine.Value, Model.Weapon.Value.ReserveAmmo.Value);
+      Model.ActiveWeapon.Changed += Model_OnWeaponChanged;
+      Model.ActiveWeapon.Value.CurrentMagazine.Changed += Model_OnWeaponMagazineChanged;
+      Model.ActiveWeapon.Value.ReserveAmmo.Changed += Model_OnReserveAmmoChanged;
+      Model.Inventory.Weapons.ItemAdded += Model_OnInventoryWeaponAdded;
+      Model.Inventory.Weapons.ItemRemoved += Model_OnInventoryWeaponRemoved;
 
-      Model.Weapon.Changed += Model_OnWeaponChanged;
-      Model.Weapon.Value.CurrentMagazine.Changed += Model_OnWeaponMagazineChanged;
-      Model.Weapon.Value.ReserveAmmo.Changed += Model_OnReserveAmmonChanged;
+      View.SetHp(Model.CurrentHp.Value, Model.MaxHp);
+      var activeWeapon = Model.ActiveWeapon.Value;
+      View.SetActiveWeapon(activeWeapon.Descriptor.Icon, activeWeapon.CurrentMagazine.Value, activeWeapon.ReserveAmmo.Value);
+      
+      var inventoryWeapons = Model.Inventory.Weapons;
+      for(var i = 0; i < inventoryWeapons.Collection.Count; i++)
+        Model_OnInventoryWeaponAdded(inventoryWeapons.Collection[i], i);
+
       return UniTask.CompletedTask;
     }
-
+    
     protected override void OnDisposed()
     {
-      Model.Weapon.Changed -= Model_OnWeaponChanged;
-      Model.Weapon.Value.CurrentMagazine.Changed -= Model_OnWeaponMagazineChanged;
-      Model.Weapon.Value.ReserveAmmo.Changed -= Model_OnReserveAmmonChanged;
+      Model.ActiveWeapon.Changed -= Model_OnWeaponChanged;
+      Model.ActiveWeapon.Value.CurrentMagazine.Changed -= Model_OnWeaponMagazineChanged;
+      Model.ActiveWeapon.Value.ReserveAmmo.Changed -= Model_OnReserveAmmoChanged;
+      Model.Inventory.Weapons.ItemAdded -= Model_OnInventoryWeaponAdded;
+      Model.Inventory.Weapons.ItemRemoved -= Model_OnInventoryWeaponRemoved;
     }
 
     private void Model_OnWeaponChanged(WeaponModel oldValue, WeaponModel newValue)
     {
       oldValue.CurrentMagazine.Changed -= Model_OnWeaponMagazineChanged;
-      oldValue.ReserveAmmo.Changed -= Model_OnReserveAmmonChanged;
+      oldValue.ReserveAmmo.Changed -= Model_OnReserveAmmoChanged;
       newValue.CurrentMagazine.Changed += Model_OnWeaponMagazineChanged;
-      newValue.ReserveAmmo.Changed += Model_OnReserveAmmonChanged;
+      newValue.ReserveAmmo.Changed += Model_OnReserveAmmoChanged;
       
-      View.SetAmmo(Model.Weapon.Value.CurrentMagazine.Value, Model.Weapon.Value.ReserveAmmo.Value);
+      View.SetActiveWeapon(newValue.Descriptor.Icon, newValue.CurrentMagazine.Value, newValue.ReserveAmmo.Value);
     }
 
-    private void Model_OnWeaponMagazineChanged(int oldValue, int newValue) => View.SetAmmo(newValue, Model.Weapon.Value.ReserveAmmo.Value);
+    private void Model_OnWeaponMagazineChanged(int oldValue, int newValue) => View.UpdateActualAmmo(newValue, Model.ActiveWeapon.Value.ReserveAmmo.Value);
 
-    private void Model_OnReserveAmmonChanged(int oldValue, int newValue) => View.SetAmmo(Model.Weapon.Value.CurrentMagazine.Value, newValue);
+    private void Model_OnReserveAmmoChanged(int oldValue, int newValue) => View.UpdateActualAmmo(Model.ActiveWeapon.Value.CurrentMagazine.Value, newValue);
+
+    private void Model_OnInventoryWeaponAdded(WeaponModel newItem, int index)
+    {
+      View.SetWeaponInInventory(index, newItem.Descriptor.Icon, newItem.CurrentMagazine.Value, newItem.ReserveAmmo.Value);
+
+      newItem.CurrentMagazine.Changed += (oldValue, newValue) => Model_OnInventoryWeaponCurrentMagazineChanged(index, newValue);
+      newItem.ReserveAmmo.Changed += (oldValue, newValue) => Model_OnInventoryWeaponReserveAmmoChanged(index, newValue);
+    }
+
+    private void Model_OnInventoryWeaponRemoved(WeaponModel oldItem, int index)
+    {
+      View.RemoveWeaponFromInventory(index);
+      // todo unsubscribe from CurrentMagazine.Changed and ReserveAmmo.Changed
+    }
+
+    private void Model_OnInventoryWeaponCurrentMagazineChanged(int weaponIndex, int newValue) => 
+      View.UpdateAmmoInInventory(weaponIndex, newValue, Model.Inventory.Weapons[weaponIndex].ReserveAmmo.Value);
+
+    private void Model_OnInventoryWeaponReserveAmmoChanged(int weaponIndex, int newValue) => 
+      View.UpdateAmmoInInventory(weaponIndex, Model.Inventory.Weapons[weaponIndex].CurrentMagazine.Value, newValue);
 
     protected override HUDModel CreateModel(Context context) => context.Model;
 

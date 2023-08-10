@@ -1,4 +1,5 @@
 using Karabaev.GameKit.Entities.Reactive;
+using Karabaev.Survival.Game.Player;
 using Karabaev.Survival.Game.Weapons;
 
 namespace Karabaev.Survival.Game.HUD
@@ -9,13 +10,17 @@ namespace Karabaev.Survival.Game.HUD
     
     public ReactiveProperty<int> CurrentHp { get; }
     
-    public ReactiveProperty<WeaponModel> Weapon { get; }
+    public ReactiveProperty<WeaponModel> ActiveWeapon { get; }
+    
+    public InventoryModel Inventory { get; }
 
-    public HUDModel(int maxHp, ReactiveProperty<int> currentHp, ReactiveProperty<WeaponModel> weapon)
+    public HUDModel(int maxHp, ReactiveProperty<int> currentHp, ReactiveProperty<WeaponModel> activeWeapon, InventoryModel inventory)
+
     {
       MaxHp = maxHp;
       CurrentHp = currentHp;
-      Weapon = weapon;
+      ActiveWeapon = activeWeapon;
+      Inventory = inventory;
     }
   }
 }
