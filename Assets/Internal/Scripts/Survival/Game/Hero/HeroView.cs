@@ -2,6 +2,7 @@ using System;
 using Karabaev.GameKit.Common.Utils;
 using Karabaev.GameKit.Entities;
 using Karabaev.Survival.Audio;
+using Karabaev.Survival.Game.Damageable;
 using Karabaev.Survival.Game.Loot;
 using Karabaev.Survival.Game.Weapons;
 using UnityEngine;
@@ -78,11 +79,19 @@ namespace Karabaev.Survival.Game.Hero
 
     public event Action<string>? LootContacted;
 
-    public void Move(Vector3 velocity)
-    {
-      _characterController.Move(velocity);
-    }
+    public void Move(Vector3 velocity) => _characterController.Move(velocity);
 
+    public RaycastTestViewModel? ShotRaycast()
+    {
+      var origin = _weaponInstance!.ProjectileSpawnPoint.position;
+      var layerMask = LayerMask.GetMask("Obstacles", "Enemies");
+      if(!Physics.Raycast(origin, transform.forward, out var hitInfo, layerMask))
+        return null;
+
+      var damageableView = hitInfo.collider.RequireComponent<IDamageableView>();
+      return new RaycastTestViewModel(damageableView.DamageableModel, hitInfo.point);
+    }
+    
     public void Shot()
     {
       if(_weaponInstance == null)

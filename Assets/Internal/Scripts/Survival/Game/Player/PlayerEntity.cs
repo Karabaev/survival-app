@@ -58,32 +58,10 @@ namespace Karabaev.Survival.Game.Player
       var currentWeapon = Model.ActiveWeapon.Value;
       
       if(_shooting && now >= _nextShootTime && currentWeapon.CurrentMagazine.Value > 0 && !_reloadFinishTime.HasValue)
-      {
-        Model.Hero.ShootFired.Set();
-        currentWeapon.CurrentMagazine.Value--;
-
-        var fireRate = currentWeapon.Descriptor.FireRate;
-        var cooldown = 1.0f / fireRate;
-        _nextShootTime = now.AddSeconds(cooldown);
-      }
+        Shoot(now);
 
       if(now >= _reloadFinishTime)
-      {
-        var ammoToMagazine = currentWeapon.Descriptor.Magazine - currentWeapon.CurrentMagazine.Value;
-
-        if(currentWeapon.ReserveAmmo.Value >= ammoToMagazine)
-        {
-          currentWeapon.ReserveAmmo.Value -= ammoToMagazine;
-          currentWeapon.CurrentMagazine.Value += ammoToMagazine;
-        }
-        else
-        {
-          currentWeapon.CurrentMagazine.Value += currentWeapon.ReserveAmmo.Value;
-          currentWeapon.ReserveAmmo.Value = 0;
-        }
-
-        _reloadFinishTime = null;
-      }
+        Reload();
     }
 
     private void Model_OnFireButtonDownFired() => _shooting = true;
@@ -143,6 +121,35 @@ namespace Karabaev.Survival.Game.Player
       var mouseWorldPosition = camera.ScreenToWorldPoint(new Vector3(mousePosition.x, mousePosition.y, depth));
       var lookDirection = MathUtils.Direction2D(Model.Hero.Position.Value, mouseWorldPosition);
       return new Vector2(lookDirection.x, lookDirection.z);
+    }
+
+    private void Shoot(GameTime now)
+    {
+      Model.Hero.ShootFired.Set();
+      Model.ActiveWeapon.Value.CurrentMagazine.Value--;
+
+      var fireRate = Model.ActiveWeapon.Value.Descriptor.FireRate;
+      var cooldown = 1.0f / fireRate;
+      _nextShootTime = now.AddSeconds(cooldown);
+    }
+
+    private void Reload()
+    {
+      var activeWeapon = Model.ActiveWeapon.Value;
+      var ammoToMagazine = activeWeapon.Descriptor.Magazine - activeWeapon.CurrentMagazine.Value;
+
+      if(activeWeapon.ReserveAmmo.Value >= ammoToMagazine)
+      {
+        activeWeapon.ReserveAmmo.Value -= ammoToMagazine;
+        activeWeapon.CurrentMagazine.Value += ammoToMagazine;
+      }
+      else
+      {
+        activeWeapon.CurrentMagazine.Value += activeWeapon.ReserveAmmo.Value;
+        activeWeapon.ReserveAmmo.Value = 0;
+      }
+
+      _reloadFinishTime = null;
     }
     
     protected override PlayerModel CreateModel(Context context) => context.Model;

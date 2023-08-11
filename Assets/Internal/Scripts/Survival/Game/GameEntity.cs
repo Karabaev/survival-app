@@ -6,11 +6,13 @@ using JetBrains.Annotations;
 using Karabaev.GameKit.Common.Utils;
 using Karabaev.GameKit.Entities;
 using Karabaev.Survival.Descriptors;
+using Karabaev.Survival.Game.Enemy;
 using Karabaev.Survival.Game.GameCamera;
 using Karabaev.Survival.Game.Hero;
 using Karabaev.Survival.Game.Loot;
 using Karabaev.Survival.Game.Player;
 using Karabaev.Survival.Game.Weapons;
+using UnityEngine;
 using VContainer;
 using Object = UnityEngine.Object;
 
@@ -28,7 +30,8 @@ namespace Karabaev.Survival.Game
     {
       var playerContext = new PlayerEntity.Context(View.transform, Model.Player, context.HeroDescriptor, context.CameraConfig);
       await CreateChildAsync<PlayerEntity, PlayerEntity.Context>(playerContext);
-      
+      var enemyContext = new EnemyEntity.Context(View.transform, new EnemyModel(_descriptorsAccess.EnemiesRegistry.Enemies.PickRandom()), Vector3.forward * 10);
+      await CreateChildAsync<EnemyEntity, EnemyEntity.Context>(enemyContext);
       Model.Player.LootContactFired.Triggered += Model_PlayerLootContactFired;
       
       Model.Loot.ItemAdded += Model_OnLootAdded;

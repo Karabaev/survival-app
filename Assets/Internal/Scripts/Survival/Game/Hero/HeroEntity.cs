@@ -72,7 +72,18 @@ namespace Karabaev.Survival.Game.Hero
 
     private void Model_OnReloadFired() => View.Reload();
 
-    private void Model_OnShootFired() => View.Shot();
+    private void Model_OnShootFired()
+    {
+      View.Shot();
+      var raycastResult = View.ShotRaycast();
+      
+      if(!raycastResult.HasValue)
+        return;
+
+      var target = raycastResult.Value.Damageable;
+      target.CurrentHp.Value -= Model.Weapon.Value.Descriptor.Damage;
+      target.HitImpactFired.Set(raycastResult.Value.ContactPosition);
+    }
 
     protected override HeroModel CreateModel(Context context) => context.Model;
 

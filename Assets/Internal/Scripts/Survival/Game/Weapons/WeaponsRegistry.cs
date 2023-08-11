@@ -30,7 +30,10 @@ namespace Karabaev.Survival.Game.Weapons
 
     [field: SerializeField]
     public AnimatorOverrideController AnimatorController { get; private set; } = null!;
-
+    
+    [field: SerializeField]
+    public int Damage { get; private set; }
+    
     [field: SerializeField]
     public int Magazine { get; private set; }
     
