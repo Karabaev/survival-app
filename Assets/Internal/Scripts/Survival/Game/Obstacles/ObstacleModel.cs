@@ -10,13 +10,13 @@ namespace Karabaev.Survival.Game.Obstacles
 
     public ReactiveTrigger<Vector3> HitImpactFired { get; }
     
-    public AsyncReactiveTrigger DestroyFired { get; }
+    public ReactiveTrigger DestroyFired { get; }
 
     public ObstacleModel(ObstacleDescriptor descriptor)
     {
       CurrentHp = new ReactiveProperty<int>(descriptor.MaxHp);
       HitImpactFired = new ReactiveTrigger<Vector3>();
-      DestroyFired = new AsyncReactiveTrigger();
+      DestroyFired = new ReactiveTrigger();
     }
   }
 }
