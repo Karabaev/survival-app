@@ -1,9 +1,11 @@
 ﻿using Cysharp.Threading.Tasks;
+using JetBrains.Annotations;
 using Karabaev.GameKit.Entities;
 using Karabaev.Survival.Game.Weapons;
 
 namespace Karabaev.Survival.Game.HUD
 {
+  [UsedImplicitly]
   public class HUDEntity : UIEntity<HUDEntity.Context, HUDModel, HUDView>
   {
     protected override UniTask OnCreatedAsync(Context context)
@@ -13,8 +15,9 @@ namespace Karabaev.Survival.Game.HUD
       Model.ActiveWeapon.Value.ReserveAmmo.Changed += Model_OnReserveAmmoChanged;
       Model.Inventory.Weapons.ItemAdded += Model_OnInventoryWeaponAdded;
       Model.Inventory.Weapons.ItemRemoved += Model_OnInventoryWeaponRemoved;
+      Model.CurrentHp.Changed += Model_OnCurrentHpChanged;
 
-      View.SetHp(Model.CurrentHp.Value, Model.MaxHp);
+      Model_OnCurrentHpChanged(Model.CurrentHp.Value, Model.MaxHp);
       var activeWeapon = Model.ActiveWeapon.Value;
       View.SetActiveWeapon(activeWeapon.Descriptor.Icon, activeWeapon.CurrentMagazine.Value, activeWeapon.ReserveAmmo.Value);
       
@@ -24,7 +27,7 @@ namespace Karabaev.Survival.Game.HUD
 
       return UniTask.CompletedTask;
     }
-    
+
     protected override void OnDisposed()
     {
       Model.ActiveWeapon.Changed -= Model_OnWeaponChanged;
@@ -32,6 +35,7 @@ namespace Karabaev.Survival.Game.HUD
       Model.ActiveWeapon.Value.ReserveAmmo.Changed -= Model_OnReserveAmmoChanged;
       Model.Inventory.Weapons.ItemAdded -= Model_OnInventoryWeaponAdded;
       Model.Inventory.Weapons.ItemRemoved -= Model_OnInventoryWeaponRemoved;
+      Model.CurrentHp.Changed -= Model_OnCurrentHpChanged;
     }
 
     private void Model_OnWeaponChanged(WeaponModel oldValue, WeaponModel newValue)
@@ -52,8 +56,8 @@ namespace Karabaev.Survival.Game.HUD
     {
       View.SetWeaponInInventory(index, newItem.Descriptor.Icon, newItem.CurrentMagazine.Value, newItem.ReserveAmmo.Value);
 
-      newItem.CurrentMagazine.Changed += (oldValue, newValue) => Model_OnInventoryWeaponCurrentMagazineChanged(index, newValue);
-      newItem.ReserveAmmo.Changed += (oldValue, newValue) => Model_OnInventoryWeaponReserveAmmoChanged(index, newValue);
+      newItem.CurrentMagazine.Changed += (_, newValue) => Model_OnInventoryWeaponCurrentMagazineChanged(index, newValue);
+      newItem.ReserveAmmo.Changed += (_, newValue) => Model_OnInventoryWeaponReserveAmmoChanged(index, newValue);
     }
 
     private void Model_OnInventoryWeaponRemoved(WeaponModel oldItem, int index)
@@ -67,6 +71,8 @@ namespace Karabaev.Survival.Game.HUD
 
     private void Model_OnInventoryWeaponReserveAmmoChanged(int weaponIndex, int newValue) => 
       View.UpdateAmmoInInventory(weaponIndex, Model.Inventory.Weapons[weaponIndex].CurrentMagazine.Value, newValue);
+
+    private void Model_OnCurrentHpChanged(int oldValue, int newValue) => View.SetHp(newValue, Model.MaxHp);
 
     protected override HUDModel CreateModel(Context context) => context.Model;
 

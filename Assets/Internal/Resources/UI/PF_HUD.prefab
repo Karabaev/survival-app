@@ -713,6 +713,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _ammoText: {fileID: 9105558366749007825}
+  _currentWeaponIcon: {fileID: 583603127177727105}
   _hpBarFilling: {fileID: 1897772404807216324}
   _weaponsPanelContainer: {fileID: 8264523973603602831}
   _weaponPanelTemplate: {fileID: 3036298950950258578}
@@ -782,7 +783,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 10905, guid: 0000000000000000f000000000000000, type: 0}
+  m_Sprite: {fileID: 21300000, guid: 7d0c7f5cf10ac6d46892909e07b1f487, type: 3}
   m_Type: 3
   m_PreserveAspect: 0
   m_FillCenter: 1
