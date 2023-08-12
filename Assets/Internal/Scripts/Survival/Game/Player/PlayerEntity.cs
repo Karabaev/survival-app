@@ -1,4 +1,5 @@
-﻿using Cysharp.Threading.Tasks;
+﻿using System.Collections.Generic;
+using Cysharp.Threading.Tasks;
 using JetBrains.Annotations;
 using Karabaev.GameKit.Common;
 using Karabaev.GameKit.Common.Utils;
@@ -21,11 +22,17 @@ namespace Karabaev.Survival.Game.Player
 
     protected override async UniTask OnCreatedAsync(Context context)
     {
-      await CreateChildAsync<GameInputEntity, GameInputEntity.Context>(new GameInputEntity.Context(View.gameObject, Model.Input));
       var heroContext = new HeroEntity.Context(View.transform, Model.Hero, context.HeroDescriptor);
-      await CreateChildAsync<HeroEntity, HeroEntity.Context>(heroContext);
-      await CreateChildAsync<GameCameraEntity, GameCameraEntity.Context>(new GameCameraEntity.Context(View.transform, Model.Camera, context.CameraConfig));
-      await CreateChildAsync<HUDEntity, HUDEntity.Context>(new HUDEntity.Context(Model.HUD));
+      var loadingTasks = new List<UniTask>
+      {
+        CreateChildAsync<GameInputEntity, GameInputEntity.Context>(new GameInputEntity.Context(View.gameObject, Model.Input)),
+        CreateChildAsync<HeroEntity, HeroEntity.Context>(heroContext),
+        CreateChildAsync<GameCameraEntity, GameCameraEntity.Context>(new GameCameraEntity.Context(View.transform, Model.Camera, context.CameraConfig)),
+        CreateChildAsync<HUDEntity, HUDEntity.Context>(new HUDEntity.Context(Model.HUD))
+      };
+      
+      await UniTask.WhenAll(loadingTasks);
+      
       Model.Camera.Target.Value = Model.Hero.HeroObject.Value;
 
       Model.Input.FireButtonDownFired.Triggered += Model_OnFireButtonDownFired;

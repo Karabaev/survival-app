@@ -1721,9 +1721,10 @@ GameObject:
   m_Component:
   - component: {fileID: 578376449398627443}
   - component: {fileID: 7389507112651452681}
+  - component: {fileID: 3585642376567821941}
   - component: {fileID: -2378868454913747647}
   - component: {fileID: -2951340143851890456}
-  - component: {fileID: 8218461901960706468}
+  - component: {fileID: 3809724635068582335}
   m_Layer: 8
   m_Name: PF_Zombie_Enemy
   m_TagString: Untagged
@@ -1759,7 +1760,7 @@ Transform:
   - {fileID: 7564548363332717844}
   - {fileID: 4560868770175324604}
   m_Father: {fileID: 0}
-  m_RootOrder: 8
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!95 &7389507112651452681
 Animator:
@@ -1782,34 +1783,8 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
---- !u!114 &-2378868454913747647
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4493914613880827488}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6500b50df1eb44099ffd0514ac812c18, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _animationView: {fileID: -2951340143851890456}
---- !u!114 &-2951340143851890456
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4493914613880827488}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 21ddc619c1a14ad1885684114312222c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _animator: {fileID: 7389507112651452681}
---- !u!136 &8218461901960706468
-CapsuleCollider:
+--- !u!143 &3585642376567821941
+CharacterController:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -1826,11 +1801,57 @@ CapsuleCollider:
   m_IsTrigger: 0
   m_ProvidesContacts: 0
   m_Enabled: 1
-  serializedVersion: 2
-  m_Radius: 0.5
+  serializedVersion: 3
   m_Height: 1.7
-  m_Direction: 1
+  m_Radius: 0.25
+  m_SlopeLimit: 45
+  m_StepOffset: 0.3
+  m_SkinWidth: 0.08
+  m_MinMoveDistance: 0.001
   m_Center: {x: 0, y: 0.85, z: 0}
+--- !u!114 &-2378868454913747647
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4493914613880827488}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6500b50df1eb44099ffd0514ac812c18, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _animationView: {fileID: -2951340143851890456}
+  _collider: {fileID: 3585642376567821941}
+  _navMeshView: {fileID: 3809724635068582335}
+  _characterController: {fileID: 3585642376567821941}
+--- !u!114 &-2951340143851890456
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4493914613880827488}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 21ddc619c1a14ad1885684114312222c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _animator: {fileID: 7389507112651452681}
+--- !u!114 &3809724635068582335
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4493914613880827488}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a4f45d7245d64578ad8a72b4f8323558, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _agentTypeId: 0
+  _movementAreaIndexes: 00000000010000000200000003000000
 --- !u!1 &4710940672626480558
 GameObject:
   m_ObjectHideFlags: 0

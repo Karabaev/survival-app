@@ -2,6 +2,7 @@
 using JetBrains.Annotations;
 using Karabaev.GameKit.ForResources;
 using Karabaev.Survival.Game.Enemy;
+using Karabaev.Survival.Game.Enemy.Descriptors;
 using Karabaev.Survival.Game.GameCamera;
 using Karabaev.Survival.Game.Hero;
 using Karabaev.Survival.Game.Loot;

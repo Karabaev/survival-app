@@ -10,7 +10,7 @@ using VContainer;
 
 namespace Karabaev.Survival.Game.Hero
 {
-  public class HeroView : UnityView
+  public class HeroView : UnityView, IDamageableView
   {
     [SerializeField, HideInInspector]
     private HeroAnimationView _animationView = null!;
@@ -76,6 +76,8 @@ namespace Karabaev.Survival.Game.Hero
         _footStepSounds = value;
       }
     }
+    
+    public IDamageableModel DamageableModel { get; set; } = null!;
 
     public event Action<string>? LootContacted;
 

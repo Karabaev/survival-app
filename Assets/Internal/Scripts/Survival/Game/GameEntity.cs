@@ -30,7 +30,7 @@ namespace Karabaev.Survival.Game
     protected override async UniTask OnCreatedAsync(Context context)
     {
       var playerContext = new PlayerEntity.Context(View.transform, Model.Player, context.HeroDescriptor, context.CameraConfig);
-      var enemyContext = new EnemyEntity.Context(View.transform, new EnemyModel(_descriptorsAccess.EnemiesRegistry.Enemies.PickRandom()), Vector3.forward * 10);
+      var enemyContext = new EnemyEntity.Context(View.transform, new EnemyModel(_descriptorsAccess.EnemiesRegistry.Values.PickRandom().Value, Model.Player.Hero), Vector3.forward * 8);
 
       var loadingTasks = new List<UniTask>
       {
@@ -73,6 +73,7 @@ namespace Karabaev.Survival.Game
         LootType.Weapon => CollectWeaponLoot,
         LootType.Ammo => CollectAmmoLoot,
         LootType.FirstAid => CollectFirstAid,
+        _ => throw new ArgumentOutOfRangeException()
       };
       
       handler.Invoke(lootModel);

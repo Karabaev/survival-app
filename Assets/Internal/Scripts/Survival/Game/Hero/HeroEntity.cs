@@ -21,7 +21,8 @@ namespace Karabaev.Survival.Game.Hero
       Model.Weapon.Changed += Model_OnWeaponChanged;
       Model.ReloadFired.Triggered += Model_OnReloadFired;
       Model.ShootFired.Triggered += Model_OnShootFired;
-
+      Model.HitImpactFired.Triggered += Model_OnHitImpactFired;
+      
       Model_OnWeaponChanged(null!, Model.Weapon.Value);
       
       return UniTask.CompletedTask;
@@ -34,6 +35,8 @@ namespace Karabaev.Survival.Game.Hero
       Model.CurrentHp.Changed -= Model_OnCurrentHpChanged;
       Model.Weapon.Changed -= Model_OnWeaponChanged;
       Model.ReloadFired.Triggered -= Model_OnReloadFired;
+      Model.ShootFired.Triggered -= Model_OnShootFired;
+      Model.HitImpactFired.Triggered -= Model_OnHitImpactFired;
     }
 
     protected override void OnTick(float deltaTime, GameTime now)
@@ -84,6 +87,11 @@ namespace Karabaev.Survival.Game.Hero
       target.CurrentHp.Value -= Model.Weapon.Value.Descriptor.Damage;
       target.HitImpactFired.Set(raycastResult.Value.ContactPosition);
     }
+    
+    private void Model_OnHitImpactFired(Vector3 value)
+    {
+      // todokmo
+    }
 
     protected override HeroModel CreateModel(Context context) => context.Model;
 
@@ -94,6 +102,7 @@ namespace Karabaev.Survival.Game.Hero
       view.Position = Vector3.zero;
       view.Rotation = Quaternion.identity;
       view.FootStepSounds = context.Descriptor.FootStepSounds;
+      view.DamageableModel = context.Model;
       Resolver.Inject(view);
       return UniTask.FromResult(view);
     }

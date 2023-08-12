@@ -1,10 +1,11 @@
 using Karabaev.GameKit.Entities.Reactive;
+using Karabaev.Survival.Game.Damageable;
 using Karabaev.Survival.Game.Weapons;
 using UnityEngine;
 
 namespace Karabaev.Survival.Game.Hero
 {
-  public class HeroModel
+  public class HeroModel : IDamageableModel
   {
     public ReactiveProperty<Vector2> MoveDirection { get; }
     
@@ -17,16 +18,18 @@ namespace Karabaev.Survival.Game.Hero
     public int MaxHp { get; }
     
     public ReactiveProperty<int> CurrentHp { get; }
-    
+
     public float CurrentMoveSpeed { get; }
-    
+
     public ReactiveTrigger ShootFired { get; }
-    
+
     public ReactiveTrigger ReloadFired { get; }
-    
+
     public ReactiveProperty<Transform?> HeroObject { get; }
 
     public ReactiveTrigger<string> LootContactFired { get; }
+
+    public ReactiveTrigger<Vector3> HitImpactFired { get; }
 
     public HeroModel(ReactiveProperty<WeaponModel> weapon, int maxHp, int currentHp, float moveSpeed, ReactiveTrigger<string> lootContactFired)
     {
@@ -41,6 +44,7 @@ namespace Karabaev.Survival.Game.Hero
       ReloadFired = new ReactiveTrigger();
       HeroObject = new ReactiveProperty<Transform?>(null);
       LootContactFired = lootContactFired;
+      HitImpactFired = new ReactiveTrigger<Vector3>();
     }
   }
 }
