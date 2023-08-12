@@ -2,6 +2,6 @@
 {
   public interface IDamageableView
   {
-    public IDamageableModel DamageableModel { get; }
+    IDamageableModel DamageableModel { get; }
   }
 }

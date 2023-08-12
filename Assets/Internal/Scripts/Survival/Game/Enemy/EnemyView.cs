@@ -2,6 +2,7 @@
 using Karabaev.GameKit.Entities;
 using Karabaev.Survival.Game.Damageable;
 using UnityEngine;
+using UnityEngine.AI;
 
 namespace Karabaev.Survival.Game.Enemy
 {
@@ -11,6 +12,8 @@ namespace Karabaev.Survival.Game.Enemy
     private EnemyAnimationView _animationView = null!;
     [SerializeField, HideInInspector]
     private Collider _collider = null!;
+    [SerializeField, HideInInspector]
+    private NavMeshAgent _navMeshAgent = null!;
     
     public Vector3 Position
     {
@@ -25,6 +28,16 @@ namespace Karabaev.Survival.Game.Enemy
     public IDamageableModel DamageableModel { set; get; } = null!;
 
     public HitImpactView HitImpactPrefab { private get; set; } = null!;
+
+    public float MoveSpeed
+    {
+      set => _navMeshAgent.speed = value;
+    }
+
+    public Vector3 Destination
+    {
+      set => _navMeshAgent.destination = value;
+    }
     
     public void Attack() => _animationView.Attack();
 
@@ -34,7 +47,7 @@ namespace Karabaev.Survival.Game.Enemy
       _collider.enabled = false;
     }
 
-    public void ShowHitImpactAsync(Vector3 hitPosition)
+    public void ShowHitImpact(Vector3 hitPosition)
     {
       var hitImpactObject = Instantiate(HitImpactPrefab);
       hitImpactObject.transform.position = hitPosition;
@@ -45,6 +58,7 @@ namespace Karabaev.Survival.Game.Enemy
     {
       _animationView = this.RequireComponent<EnemyAnimationView>();
       _collider = this.RequireComponent<Collider>();
+      _navMeshAgent = this.RequireComponent<NavMeshAgent>();
     }
   }
 }

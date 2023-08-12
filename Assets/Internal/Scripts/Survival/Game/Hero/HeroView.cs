@@ -85,7 +85,7 @@ namespace Karabaev.Survival.Game.Hero
     {
       var origin = _weaponInstance!.ProjectileSpawnPoint.position;
       var layerMask = LayerMask.GetMask("Obstacles", "Enemies");
-      if(!Physics.Raycast(origin, transform.forward, out var hitInfo, layerMask))
+      if(!Physics.Raycast(origin, transform.forward, out var hitInfo, float.MaxValue, layerMask))
         return null;
 
       var damageableView = hitInfo.collider.RequireComponent<IDamageableView>();

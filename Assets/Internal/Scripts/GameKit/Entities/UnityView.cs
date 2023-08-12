@@ -1,5 +1,5 @@
 ﻿using System;
-using Karabaev.GameKit.Common;
+using Karabaev.GameKit.AppManagement;
 using Karabaev.GameKit.Common.Utils;
 using UnityEngine;
 

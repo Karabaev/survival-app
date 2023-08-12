@@ -5,6 +5,7 @@ using Karabaev.Survival.Game.Enemy;
 using Karabaev.Survival.Game.GameCamera;
 using Karabaev.Survival.Game.Hero;
 using Karabaev.Survival.Game.Loot;
+using Karabaev.Survival.Game.Obstacles;
 using Karabaev.Survival.Game.Weapons;
 
 namespace Karabaev.Survival.Descriptors
@@ -21,6 +22,8 @@ namespace Karabaev.Survival.Descriptors
     public LootRegistry LootRegistry { get; private set; } = null!;
 
     public EnemiesRegistry EnemiesRegistry { get; private set; } = null!;
+    
+    public ObstaclesRegistry ObstaclesRegistry { get; private set; } = null!;
 
     public GameCameraConfig CameraConfig { get; private set; } = null!;
 
@@ -30,6 +33,7 @@ namespace Karabaev.Survival.Descriptors
       WeaponsRegistry = await _resourceService.LoadAsync<WeaponsRegistry>("Descriptors/DR_Weapons");
       LootRegistry = await _resourceService.LoadAsync<LootRegistry>("Descriptors/DR_Loot");
       EnemiesRegistry = await _resourceService.LoadAsync<EnemiesRegistry>("Descriptors/Enemies/DR_Enemies");
+      ObstaclesRegistry = await _resourceService.LoadAsync<ObstaclesRegistry>("Descriptors/Obstacles/DR_Obstacles");
       CameraConfig = await _resourceService.LoadAsync<GameCameraConfig>("Descriptors/DR_CameraConfig");
     }
 

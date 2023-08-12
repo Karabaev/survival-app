@@ -1,7 +1,7 @@
 ﻿using System.Threading;
 using UnityEngine;
 
-namespace Karabaev.GameKit.Common
+namespace Karabaev.GameKit.AppManagement
 {
   public static class ApplicationStateListener
   {

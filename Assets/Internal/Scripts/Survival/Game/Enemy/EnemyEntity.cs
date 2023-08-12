@@ -23,7 +23,7 @@ namespace Karabaev.Survival.Game.Enemy
       Model.CurrentHp.Changed -= Model_OnCurrentHpChanged;
     }
 
-    private void Model_OnHitImpactFired(Vector3 hitPosition) => View.ShowHitImpactAsync(hitPosition);
+    private void Model_OnHitImpactFired(Vector3 hitPosition) => View.ShowHitImpact(hitPosition);
 
     private void Model_OnCurrentHpChanged(int oldValue, int newValue)
     {

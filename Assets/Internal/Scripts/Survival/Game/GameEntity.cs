@@ -9,6 +9,7 @@ using Karabaev.Survival.Descriptors;
 using Karabaev.Survival.Game.Enemy;
 using Karabaev.Survival.Game.GameCamera;
 using Karabaev.Survival.Game.Hero;
+using Karabaev.Survival.Game.Location;
 using Karabaev.Survival.Game.Loot;
 using Karabaev.Survival.Game.Player;
 using Karabaev.Survival.Game.Weapons;
@@ -29,9 +30,17 @@ namespace Karabaev.Survival.Game
     protected override async UniTask OnCreatedAsync(Context context)
     {
       var playerContext = new PlayerEntity.Context(View.transform, Model.Player, context.HeroDescriptor, context.CameraConfig);
-      await CreateChildAsync<PlayerEntity, PlayerEntity.Context>(playerContext);
       var enemyContext = new EnemyEntity.Context(View.transform, new EnemyModel(_descriptorsAccess.EnemiesRegistry.Enemies.PickRandom()), Vector3.forward * 10);
-      await CreateChildAsync<EnemyEntity, EnemyEntity.Context>(enemyContext);
+
+      var loadingTasks = new List<UniTask>
+      {
+        CreateChildAsync<PlayerEntity, PlayerEntity.Context>(playerContext),
+        CreateChildAsync<EnemyEntity, EnemyEntity.Context>(enemyContext),
+        CreateChildAsync<LocationEntity, LocationEntity.Context>(new LocationEntity.Context(View.transform, Model.Location))
+      };
+
+      await UniTask.WhenAll(loadingTasks);
+      
       Model.Player.LootContactFired.Triggered += Model_PlayerLootContactFired;
       
       Model.Loot.ItemAdded += Model_OnLootAdded;
