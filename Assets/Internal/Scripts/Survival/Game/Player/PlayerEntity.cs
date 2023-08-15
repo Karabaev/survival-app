@@ -134,15 +134,17 @@ namespace Karabaev.Survival.Game.Player
     private Vector2 CalculateHeroLookDirection()
     {
       var camera = Model.Camera.Camera.Value;
-      var cameraTransform = camera.transform;
-      var sin = Mathf.Sin(Mathf.Deg2Rad * cameraTransform.localRotation.eulerAngles.x);
-      var depth = cameraTransform.position.y / sin;
-      var mousePosition = Model.Input.MousePosition;
-      var mouseWorldPosition = camera.ScreenToWorldPoint(new Vector3(mousePosition.x, mousePosition.y, depth));
+
+      var heroPositionY = Model.Hero.Position.Value.y;
+      var plane = new Plane(new Vector3(0.0f, heroPositionY, 0.0f), new Vector3(1.0f, heroPositionY, 0.0f), new Vector3(0.0f, heroPositionY, 1.0f));
+      var ray = camera.ScreenPointToRay(Model.Input.MousePosition);
+      plane.Raycast(ray, out var depth);
+      var mouseWorldPosition = ray.GetPoint(depth);
+      
       var lookDirection = MathUtils.Direction2D(Model.Hero.Position.Value, mouseWorldPosition);
       return new Vector2(lookDirection.x, lookDirection.z);
     }
-
+    
     private void Shoot(GameTime now)
     {
       Model.Hero.ShootFired.Set();

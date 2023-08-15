@@ -86,9 +86,10 @@ namespace Karabaev.Survival.Game.Hero
 
     public RaycastTestViewModel? ShotRaycast()
     {
-      var origin = _weaponInstance!.ProjectileSpawnPoint.position;
+      var ray = new Ray(_characterController.bounds.center, transform.forward);
+      
       var layerMask = LayerMask.GetMask("Obstacles", "Enemies");
-      if(!Physics.Raycast(origin, transform.forward, out var hitInfo, float.MaxValue, layerMask))
+      if(!Physics.Raycast(ray, out var hitInfo, float.MaxValue, layerMask))
         return null;
 
       var damageableView = hitInfo.collider.RequireComponent<IDamageableView>();
