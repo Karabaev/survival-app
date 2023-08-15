@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using Karabaev.Survival.Game.Loot.Descriptors;
+using UnityEngine;
 
 namespace Karabaev.Survival.Game.Loot
 {

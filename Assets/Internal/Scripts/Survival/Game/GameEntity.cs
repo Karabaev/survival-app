@@ -12,6 +12,7 @@ using Karabaev.Survival.Game.GameCamera;
 using Karabaev.Survival.Game.Hero;
 using Karabaev.Survival.Game.Location;
 using Karabaev.Survival.Game.Loot;
+using Karabaev.Survival.Game.Loot.Descriptors;
 using Karabaev.Survival.Game.Player;
 using Karabaev.Survival.Game.Weapons;
 using Karabaev.Survival.Game.Weapons.Descriptors;
@@ -53,7 +54,7 @@ namespace Karabaev.Survival.Game
 
       foreach(var spawnPoint in lootSpawnPoints)
       {
-        var descriptor = _descriptorsAccess.LootRegistry.Loot.First(l => l.Id == spawnPoint.LootId);
+        var descriptor = spawnPoint.Descriptor;
         Model.Loot.Add(new LootModel($"{descriptor.Id}_{RandomUtils.RandomString()}", spawnPoint.Position, descriptor));
         spawnPoint.DestroyObject();
       }
