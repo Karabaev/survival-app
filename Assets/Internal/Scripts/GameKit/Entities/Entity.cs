@@ -2,9 +2,7 @@ using System;
 using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
 using Karabaev.GameKit.Common;
-using UnityEngine;
 using VContainer;
-using VContainer.Unity;
 
 namespace Karabaev.GameKit.Entities
 {
@@ -32,6 +30,7 @@ namespace Karabaev.GameKit.Entities
     protected List<IEntity> Children { get; private set; } = default!;
 
     private bool _initialized;
+    private bool _disposed;
     private List<IDisposable> _disposables = null!;
     
     public async UniTask InitializeAsync(TContext context)
@@ -48,6 +47,7 @@ namespace Karabaev.GameKit.Entities
 
     public void Dispose()
     {
+      _disposed = true;
       foreach(var disposable in _disposables)
         disposable.Dispose();
       
@@ -60,7 +60,7 @@ namespace Karabaev.GameKit.Entities
 
     void IEntity.Tick(float deltaTime, GameTime now)
     {
-      if(!_initialized)
+      if(!_initialized || _disposed)
         return;
       
       foreach(var entity in Children)

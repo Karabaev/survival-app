@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Cysharp.Threading.Tasks;
 using JetBrains.Annotations;
+using Karabaev.GameKit.Common;
 using Karabaev.GameKit.Common.Utils;
 using Karabaev.GameKit.Entities;
 using Karabaev.Survival.Descriptors;
@@ -13,7 +14,6 @@ using Karabaev.Survival.Game.Location;
 using Karabaev.Survival.Game.Loot;
 using Karabaev.Survival.Game.Player;
 using Karabaev.Survival.Game.Weapons;
-using UnityEngine;
 using VContainer;
 using Object = UnityEngine.Object;
 
@@ -26,16 +26,15 @@ namespace Karabaev.Survival.Game
     private readonly DescriptorsAccess _descriptorsAccess = null!;
 
     private readonly Dictionary<LootModel, LootEntity> _lootEntities = new();
+    private readonly Dictionary<EnemyModel, EnemyEntity> _enemyEntities = new();
 
     protected override async UniTask OnCreatedAsync(Context context)
     {
       var playerContext = new PlayerEntity.Context(View.transform, Model.Player, context.HeroDescriptor, context.CameraConfig);
-      var enemyContext = new EnemyEntity.Context(View.transform, new EnemyModel(_descriptorsAccess.EnemiesRegistry.Values.PickRandom().Value, Model.Player.Hero), Vector3.forward * 8);
 
       var loadingTasks = new List<UniTask>
       {
         CreateChildAsync<PlayerEntity, PlayerEntity.Context>(playerContext),
-        CreateChildAsync<EnemyEntity, EnemyEntity.Context>(enemyContext),
         CreateChildAsync<LocationEntity, LocationEntity.Context>(new LocationEntity.Context(View.transform, Model.Location))
       };
 
@@ -46,6 +45,9 @@ namespace Karabaev.Survival.Game
       Model.Loot.ItemAdded += Model_OnLootAdded;
       Model.Loot.ItemRemoved += Model_OnLootRemoved;
 
+      Model.Enemies.ItemAdded += Model_OnEnemyAdded;
+      Model.Enemies.ItemRemoved += Model_OnEnemyRemoved;
+      
       var lootSpawnPoints = Object.FindObjectsOfType<LootSpawnPoint>();
 
       foreach(var spawnPoint in lootSpawnPoints)
@@ -62,8 +64,22 @@ namespace Karabaev.Survival.Game
       
       Model.Loot.ItemAdded -= Model_OnLootAdded;
       Model.Loot.ItemRemoved -= Model_OnLootRemoved;
+      Model.Enemies.ItemAdded -= Model_OnEnemyAdded;
+      Model.Enemies.ItemRemoved -= Model_OnEnemyRemoved;
     }
-  
+    
+    protected override void OnTick(float deltaTime, GameTime now)
+    {
+      foreach(var spawnPoint in Model.Location.EnemySpawnPoints)
+      {
+        if(now < spawnPoint.NextSpawnTime)
+          continue;
+
+        Model.Enemies.Add(new EnemyModel(spawnPoint.Descriptor, Model.Player.Hero, spawnPoint.Position));
+        spawnPoint.NextSpawnTime = now.Add(spawnPoint.SpawnInterval);
+      }
+    }
+
     private void Model_PlayerLootContactFired(string lootId)
     {
       var lootModel = Model.Loot.Collection.First(l => l.Id == lootId);
@@ -89,6 +105,29 @@ namespace Karabaev.Survival.Game
     {
       _lootEntities.Remove(oldItem, out var entity);
       DisposeChild(entity);
+    }
+    
+    private async void Model_OnEnemyAdded(EnemyModel newItem, int index)
+    {
+      var entity = await CreateChildAsync<EnemyEntity, EnemyEntity.Context>(new EnemyEntity.Context(View.transform, newItem));
+      _enemyEntities.Add(newItem, entity);
+
+      newItem.Dead.Changed += OnDeadChanged;
+
+      void OnDeadChanged(bool _, bool newValue)
+      {
+        if(!newValue)
+          return;
+        
+        Model.Enemies.Remove(newItem);
+      }
+    }
+
+    private void Model_OnEnemyRemoved(EnemyModel oldItem, int index)
+    {
+      _enemyEntities.Remove(oldItem, out var entity);
+      DisposeChild(entity);
+      // todo unsubscribe from Dead.Changed
     }
 
     private void CollectWeaponLoot(LootModel loot)

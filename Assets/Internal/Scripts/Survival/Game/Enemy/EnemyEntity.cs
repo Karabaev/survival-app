@@ -16,10 +16,11 @@ namespace Karabaev.Survival.Game.Enemy
     private Vector3[]? _path;
     private int _currentPathIndex;
 
+    private bool _dying;
+
     protected override UniTask OnCreatedAsync(Context context)
     {
       View.HitImpactPrefab = Model.Descriptor.HitImpactPrefab;
-      
       Model.HitImpactFired.Triggered += Model_OnHitImpactFired;
       Model.CurrentHp.Changed += Model_OnCurrentHpChanged;
       Model.Target.Changed += Model_OnTargetChanged;
@@ -34,10 +35,16 @@ namespace Karabaev.Survival.Game.Enemy
       Model.HitImpactFired.Triggered -= Model_OnHitImpactFired;
       Model.CurrentHp.Changed -= Model_OnCurrentHpChanged;
       Model.Target.Changed -= Model_OnTargetChanged;
+
+      if(Model.Target.Value != null)
+        Model.Target.Value.Position.Changed -= Model_OnTargetPositionChanged;
     }
 
     protected override void OnTick(float deltaTime, GameTime now)
     {
+      if(_dying)
+        return;
+
       if(_path != null && _currentPathIndex < _path.Length)
       {
         var nextDestination = _path[_currentPathIndex];
@@ -57,21 +64,20 @@ namespace Karabaev.Survival.Game.Enemy
         Attack(now, heroesResult.Value);
 
       var obstaclesResult = View.CheckObstacles(Model.Descriptor.AttackDistance);
-      if(obstaclesResult.HasValue)
-      {
-        if(_nextAttackTime <= now)
-          Attack(now, obstaclesResult.Value);
-      }
+      if(obstaclesResult.HasValue && _nextAttackTime <= now)
+        Attack(now, obstaclesResult.Value);
     }
 
     private void Model_OnHitImpactFired(Vector3 hitPosition) => View.ShowHitImpact(hitPosition);
 
-    private void Model_OnCurrentHpChanged(int oldValue, int newValue)
+    private async void Model_OnCurrentHpChanged(int oldValue, int newValue)
     {
       if(newValue > 0)
         return;
-      
-      View.Die();
+
+      _dying = true;
+      await View.DieAsync();
+      Model.Dead.Value = true;
     }
 
     private void Model_OnTargetChanged(HeroModel? oldValue, HeroModel? newValue)
@@ -82,6 +88,7 @@ namespace Karabaev.Survival.Game.Enemy
       if(newValue == null)
       {
         _path = null;
+        View.AnimationMoving = false;
         return;
       }
 
@@ -109,15 +116,16 @@ namespace Karabaev.Survival.Game.Enemy
     
     protected override EnemyModel CreateModel(Context context) => context.Model;
 
-    protected override UniTask<EnemyView> CreateViewAsync(Context context)
+    protected override async UniTask<EnemyView> CreateViewAsync(Context context)
     {
       var view = Object.Instantiate(context.Model.Descriptor.Prefab, context.Parent);
       view.name = context.Model.Descriptor.Id;
-      view.Position = context.SpawnPosition;
       view.DamageableModel = context.Model;
-      return UniTask.FromResult(view);
+      view.Position = Model.InitialPosition;
+      await UniTask.Yield(PlayerLoopTiming.FixedUpdate); // wait until physics sync position
+      return view;
     }
 
-    public record Context(Transform Parent, EnemyModel Model, Vector3 SpawnPosition);
+    public record Context(Transform Parent, EnemyModel Model);
   }
 }

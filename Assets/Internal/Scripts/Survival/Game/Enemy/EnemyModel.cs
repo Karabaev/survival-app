@@ -10,18 +10,24 @@ namespace Karabaev.Survival.Game.Enemy
   {
     public EnemyDescriptor Descriptor { get; }
 
+    public Vector3 InitialPosition { get; }
+
     public ReactiveProperty<int> CurrentHp { get; }
 
     public ReactiveTrigger<Vector3> HitImpactFired { get; }
 
     public ReactiveProperty<HeroModel?> Target { get; }
     
-    public EnemyModel(EnemyDescriptor descriptor, HeroModel target)
+    public ReactiveProperty<bool> Dead { get; }
+
+    public EnemyModel(EnemyDescriptor descriptor, HeroModel target, Vector3 initialPosition)
     {
       Descriptor = descriptor;
+      InitialPosition = initialPosition;
       CurrentHp = new ReactiveProperty<int>(Descriptor.MaxHp);
       HitImpactFired = new ReactiveTrigger<Vector3>();
       Target = new ReactiveProperty<HeroModel?>(target);
+      Dead = new ReactiveProperty<bool>(false);
     }
   }
 }

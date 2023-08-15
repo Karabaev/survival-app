@@ -1,4 +1,5 @@
-﻿using Karabaev.GameKit.Common.Utils;
+﻿using Cysharp.Threading.Tasks;
+using Karabaev.GameKit.Common.Utils;
 using Karabaev.GameKit.Entities;
 using Karabaev.Survival.Game.Damageable;
 using UnityEngine;
@@ -41,7 +42,7 @@ namespace Karabaev.Survival.Game.Enemy
     public HitImpactView HitImpactPrefab { private get; set; } = null!;
     
     public void Move(Vector3 velocity) => _characterController.Move(velocity);
-    
+
     public RaycastTestViewModel? CheckObstacles(float distance) => CheckTargets(distance, LayerMask.GetMask("Obstacles"));
 
     public RaycastTestViewModel? CheckHeroes(float distance) => CheckTargets(distance, LayerMask.GetMask("Heroes"));
@@ -61,10 +62,10 @@ namespace Karabaev.Survival.Game.Enemy
 
     public void AttackAnimation() => _animationView.Attack();
 
-    public void Die()
+    public UniTask DieAsync()
     {
-      _animationView.RandomDie();
       _collider.enabled = false;
+      return _animationView.StartAndWaitDieAsync();
     }
 
     public void ShowHitImpact(Vector3 hitPosition)

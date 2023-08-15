@@ -1,4 +1,5 @@
 ﻿using Karabaev.GameKit.Entities.Reactive;
+using Karabaev.Survival.Game.Enemy;
 using Karabaev.Survival.Game.GameCamera;
 using Karabaev.Survival.Game.GameInput;
 using Karabaev.Survival.Game.Hero;
@@ -21,6 +22,8 @@ namespace Karabaev.Survival.Game
     
     public ReactiveCollection<ObstacleModel> Obstacles { get; }
 
+    public ReactiveCollection<EnemyModel> Enemies { get; }
+
     public GameModel(HeroDescriptor heroDescriptor, WeaponDescriptor weaponDescriptor)
     {
       var input = new GameInputModel();
@@ -29,6 +32,7 @@ namespace Karabaev.Survival.Game
       Loot = new ReactiveCollection<LootModel>();
       Location = new LocationModel();
       Obstacles = Location.Obstacles;
+      Enemies = new ReactiveCollection<EnemyModel>();
     }
   }
 }

@@ -90,7 +90,7 @@ namespace Karabaev.Survival.Game.Hero
     
     private void Model_OnHitImpactFired(Vector3 value)
     {
-      // todokmo
+      // todo
     }
 
     protected override HeroModel CreateModel(Context context) => context.Model;

@@ -1,5 +1,7 @@
 ﻿using Karabaev.GameKit.Common.Utils;
 using Karabaev.GameKit.Entities;
+using Karabaev.Survival.Game.Enemy;
+using Karabaev.Survival.Game.Enemy.SpawnPoint;
 using Karabaev.Survival.Game.Obstacles;
 using Unity.AI.Navigation;
 using UnityEngine;
@@ -13,6 +15,8 @@ namespace Karabaev.Survival.Game.Location
     private NavMeshSurface _navMeshSurface = null!;
     [field: SerializeField, HideInInspector]
     public ObstacleView[] Obstacles { get; private set; } = null!;
+    [field: SerializeField, HideInInspector]
+    public EnemySpawnPointView[] EnemySpawnPoints { get; private set; } = null!;
     
     private AsyncOperation? _lastUpdateOperation;
     
@@ -40,6 +44,7 @@ namespace Karabaev.Survival.Game.Location
     {
       _navMeshSurface = this.RequireComponent<NavMeshSurface>();
       Obstacles = GetComponentsInChildren<ObstacleView>();
+      EnemySpawnPoints = GetComponentsInChildren<EnemySpawnPointView>();
     }
   }
 }
