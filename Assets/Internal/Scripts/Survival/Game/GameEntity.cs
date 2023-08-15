@@ -17,7 +17,6 @@ using Karabaev.Survival.Game.Player;
 using Karabaev.Survival.Game.Weapons;
 using Karabaev.Survival.Game.Weapons.Descriptors;
 using VContainer;
-using Object = UnityEngine.Object;
 
 namespace Karabaev.Survival.Game
 {
@@ -50,13 +49,10 @@ namespace Karabaev.Survival.Game
       Model.Enemies.ItemAdded += Model_OnEnemyAdded;
       Model.Enemies.ItemRemoved += Model_OnEnemyRemoved;
       
-      var lootSpawnPoints = Object.FindObjectsOfType<LootSpawnPoint>();
-
-      foreach(var spawnPoint in lootSpawnPoints)
+      foreach(var spawnPoint in Model.Location.LootSpawnPoints)
       {
         var descriptor = spawnPoint.Descriptor;
         Model.Loot.Add(new LootModel($"{descriptor.Id}_{RandomUtils.RandomString()}", spawnPoint.Position, descriptor));
-        spawnPoint.DestroyObject();
       }
     }
 

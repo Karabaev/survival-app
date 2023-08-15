@@ -5,6 +5,7 @@ using Karabaev.GameKit.Common.Utils;
 using Karabaev.GameKit.Entities;
 using Karabaev.GameKit.Entities.Reactive;
 using Karabaev.Survival.Game.Enemy.SpawnPoint;
+using Karabaev.Survival.Game.Loot;
 using Karabaev.Survival.Game.Obstacles;
 using UnityEngine;
 
@@ -23,11 +24,17 @@ namespace Karabaev.Survival.Game.Location
       foreach(var obstacleView in View.Obstacles)
         obstacleTasks.Add(CreateObstacleAsync(obstacleView));
 
-      var spawnPoints = new List<EnemySpawnPointModel>(View.EnemySpawnPoints.Length);
+      var enemySpawnPoints = new List<EnemySpawnPointModel>(View.EnemySpawnPoints.Length);
       foreach(var spawnPoint in View.EnemySpawnPoints)
-        spawnPoints.Add(new EnemySpawnPointModel(spawnPoint.Position, spawnPoint.Descriptor, spawnPoint.SpawnInterval));
+        enemySpawnPoints.Add(new EnemySpawnPointModel(spawnPoint.Position, spawnPoint.Descriptor, spawnPoint.SpawnInterval));
 
-      Model.EnemySpawnPoints = spawnPoints;
+      Model.EnemySpawnPoints = enemySpawnPoints;
+      
+      var lootSpawnPoints = new List<LootSpawnPointModel>(View.LootSpawnPoints.Length);
+      foreach(var spawnPoint in View.LootSpawnPoints)
+        lootSpawnPoints.Add(new LootSpawnPointModel(spawnPoint.Position, spawnPoint.Descriptor));
+
+      Model.LootSpawnPoints = lootSpawnPoints;
       
       return UniTask.WhenAll(obstacleTasks);
     }

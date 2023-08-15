@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using Karabaev.GameKit.Entities.Reactive;
-using Karabaev.Survival.Game.Enemy;
 using Karabaev.Survival.Game.Enemy.SpawnPoint;
+using Karabaev.Survival.Game.Loot;
 using Karabaev.Survival.Game.Obstacles;
 
 namespace Karabaev.Survival.Game.Location
@@ -10,7 +10,9 @@ namespace Karabaev.Survival.Game.Location
   {
     public ReactiveCollection<ObstacleModel> Obstacles { get; }
 
-    public IReadOnlyList<EnemySpawnPointModel> EnemySpawnPoints { get; set; }
+    public IReadOnlyList<EnemySpawnPointModel> EnemySpawnPoints { get; set; } = null!;
+
+    public IReadOnlyList<LootSpawnPointModel> LootSpawnPoints { get; set; } = null!;
 
     public LocationModel() => Obstacles = new ReactiveCollection<ObstacleModel>();
   }

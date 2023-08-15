@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace Karabaev.Survival.Game.Loot
 {
-  public class LootSpawnPoint : MonoBehaviour
+  public class LootSpawnPointView : MonoBehaviour
   {
     [field: SerializeField]
     public LootDescriptor Descriptor { get; private set; } = null!;
