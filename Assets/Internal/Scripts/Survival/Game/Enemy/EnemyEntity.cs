@@ -66,6 +66,8 @@ namespace Karabaev.Survival.Game.Enemy
       var obstaclesResult = View.CheckObstacles(Model.Descriptor.AttackDistance);
       if(obstaclesResult.HasValue && _nextAttackTime <= now)
         Attack(now, obstaclesResult.Value);
+
+      Model.Position = View.Position;
     }
 
     private void Model_OnHitImpactFired(Vector3 hitPosition) => View.ShowHitImpact(hitPosition);
@@ -121,7 +123,7 @@ namespace Karabaev.Survival.Game.Enemy
       var view = Object.Instantiate(context.Model.Descriptor.Prefab, context.Parent);
       view.name = context.Model.Descriptor.Id;
       view.DamageableModel = context.Model;
-      view.Position = Model.InitialPosition;
+      view.Position = Model.Position;
       await UniTask.Yield(PlayerLoopTiming.FixedUpdate); // wait until physics sync position
       return view;
     }

@@ -1,5 +1,6 @@
 ﻿using Karabaev.Survival.Descriptors;
 using Karabaev.Survival.Game.Damageable;
+using Karabaev.Survival.Game.Loot.Descriptors;
 using UnityEngine;
 
 namespace Karabaev.Survival.Game.Enemy.Descriptors
@@ -27,5 +28,8 @@ namespace Karabaev.Survival.Game.Enemy.Descriptors
 
     [field: SerializeField]
     public HitImpactView HitImpactPrefab { get; private set; } = null!;
+
+    [field: SerializeField]
+    public LootDescriptor[] PossibleLoot { get; private set; } = null!;
   }
 }

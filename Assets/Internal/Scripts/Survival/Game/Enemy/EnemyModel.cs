@@ -10,7 +10,7 @@ namespace Karabaev.Survival.Game.Enemy
   {
     public EnemyDescriptor Descriptor { get; }
 
-    public Vector3 InitialPosition { get; }
+    public Vector3 Position { get; set; }
 
     public ReactiveProperty<int> CurrentHp { get; }
 
@@ -23,7 +23,7 @@ namespace Karabaev.Survival.Game.Enemy
     public EnemyModel(EnemyDescriptor descriptor, HeroModel target, Vector3 initialPosition)
     {
       Descriptor = descriptor;
-      InitialPosition = initialPosition;
+      Position = initialPosition;
       CurrentHp = new ReactiveProperty<int>(Descriptor.MaxHp);
       HitImpactFired = new ReactiveTrigger<Vector3>();
       Target = new ReactiveProperty<HeroModel?>(target);

@@ -52,7 +52,7 @@ namespace Karabaev.Survival.Game
       foreach(var spawnPoint in Model.Location.LootSpawnPoints)
       {
         var descriptor = spawnPoint.Descriptor;
-        Model.Loot.Add(new LootModel($"{descriptor.Id}_{RandomUtils.RandomString()}", spawnPoint.Position, descriptor));
+        Model.Loot.Add(new LootModel(spawnPoint.Position, descriptor));
       }
     }
 
@@ -126,6 +126,12 @@ namespace Karabaev.Survival.Game
       _enemyEntities.Remove(oldItem, out var entity);
       DisposeChild(entity);
       // todo unsubscribe from Dead.Changed
+
+      if(oldItem.Descriptor.PossibleLoot.Length <= 0)
+        return;
+      
+      var loot = new LootModel(oldItem.Position, oldItem.Descriptor.PossibleLoot.PickRandom());
+      Model.Loot.Add(loot);
     }
 
     private void CollectWeaponLoot(LootModel loot)
