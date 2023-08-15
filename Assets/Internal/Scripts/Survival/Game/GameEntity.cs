@@ -14,6 +14,7 @@ using Karabaev.Survival.Game.Location;
 using Karabaev.Survival.Game.Loot;
 using Karabaev.Survival.Game.Player;
 using Karabaev.Survival.Game.Weapons;
+using Karabaev.Survival.Game.Weapons.Descriptors;
 using VContainer;
 using Object = UnityEngine.Object;
 
@@ -89,7 +90,7 @@ namespace Karabaev.Survival.Game
         LootType.Weapon => CollectWeaponLoot,
         LootType.Ammo => CollectAmmoLoot,
         LootType.FirstAid => CollectFirstAid,
-        _ => throw new ArgumentOutOfRangeException()
+        _ => throw new NotImplementedException()
       };
       
       handler.Invoke(lootModel);
@@ -132,7 +133,7 @@ namespace Karabaev.Survival.Game
 
     private void CollectWeaponLoot(LootModel loot)
     {
-      var weaponDescriptor = _descriptorsAccess.WeaponsRegistry.Weapons.First(w => w.Id == loot.Descriptor.ItemId);
+      var weaponDescriptor = _descriptorsAccess.WeaponsRegistry.Values[loot.Descriptor.ItemId];
 
       var inventoryWeapons = Model.Player.Inventory.Weapons;
       var foundWeapon = inventoryWeapons.Collection.FirstOrDefault(w => w.Descriptor.Id == weaponDescriptor.Id);
@@ -153,7 +154,7 @@ namespace Karabaev.Survival.Game
 
     private void CollectAmmoLoot(LootModel loot)
     {
-      var weaponDescriptor = _descriptorsAccess.WeaponsRegistry.Weapons.First(w => w.Id == loot.Descriptor.ItemId);
+      var weaponDescriptor = _descriptorsAccess.WeaponsRegistry.Values[loot.Descriptor.ItemId];
       var inventoryWeapon = Model.Player.Inventory.Weapons.Collection.FirstOrDefault(w => w.Descriptor.Id == weaponDescriptor.Id);
 
       if(inventoryWeapon == null)

@@ -11,6 +11,8 @@ namespace Karabaev.Survival.Descriptors
 
     public IReadOnlyDictionary<string, T> Values { get; private set; } = null!;
 
-    private void Awake() => Values = _values.ToDictionary(descriptor => descriptor.Id, descriptor => descriptor);
+    // private void Awake() => Values = _values.ToDictionary(descriptor => descriptor.Id, descriptor => descriptor);
+
+    private void OnEnable() => Values = _values.ToDictionary(descriptor => descriptor.Id, descriptor => descriptor);
   }
 }

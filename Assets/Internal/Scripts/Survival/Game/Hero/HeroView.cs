@@ -5,6 +5,7 @@ using Karabaev.Survival.Audio;
 using Karabaev.Survival.Game.Damageable;
 using Karabaev.Survival.Game.Loot;
 using Karabaev.Survival.Game.Weapons;
+using Karabaev.Survival.Game.Weapons.Descriptors;
 using UnityEngine;
 using VContainer;
 

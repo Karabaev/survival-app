@@ -1,4 +1,5 @@
 ﻿using Karabaev.GameKit.Entities.Reactive;
+using Karabaev.Survival.Game.Weapons.Descriptors;
 
 namespace Karabaev.Survival.Game.Weapons
 {

@@ -1,17 +1,17 @@
 ﻿using Cysharp.Threading.Tasks;
 using JetBrains.Annotations;
 using Karabaev.GameKit.ForResources;
-using Karabaev.Survival.Game.Enemy;
 using Karabaev.Survival.Game.Enemy.Descriptors;
 using Karabaev.Survival.Game.GameCamera;
 using Karabaev.Survival.Game.Hero;
 using Karabaev.Survival.Game.Loot;
 using Karabaev.Survival.Game.Obstacles;
-using Karabaev.Survival.Game.Weapons;
+using Karabaev.Survival.Game.Weapons.Descriptors;
 
 namespace Karabaev.Survival.Descriptors
 {
   [UsedImplicitly]
+  [PublicAPI]
   public class DescriptorsAccess
   {
     private readonly IResourceService _resourceService;
@@ -31,7 +31,7 @@ namespace Karabaev.Survival.Descriptors
     public async UniTask InitializeAsync()
     {
       HeroesRegistry = await _resourceService.LoadAsync<HeroesRegistry>("Descriptors/DR_Heroes");
-      WeaponsRegistry = await _resourceService.LoadAsync<WeaponsRegistry>("Descriptors/DR_Weapons");
+      WeaponsRegistry = await _resourceService.LoadAsync<WeaponsRegistry>("Descriptors/Weapons/DR_Weapons");
       LootRegistry = await _resourceService.LoadAsync<LootRegistry>("Descriptors/DR_Loot");
       EnemiesRegistry = await _resourceService.LoadAsync<EnemiesRegistry>("Descriptors/Enemies/DR_Enemies");
       ObstaclesRegistry = await _resourceService.LoadAsync<ObstaclesRegistry>("Descriptors/Obstacles/DR_Obstacles");

@@ -8,6 +8,7 @@ using Karabaev.Survival.Game.Loot;
 using Karabaev.Survival.Game.Obstacles;
 using Karabaev.Survival.Game.Player;
 using Karabaev.Survival.Game.Weapons;
+using Karabaev.Survival.Game.Weapons.Descriptors;
 using UnityEngine;
 
 namespace Karabaev.Survival.Game

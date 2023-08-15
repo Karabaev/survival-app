@@ -1,24 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using Karabaev.Survival.Descriptors;
 using UnityEngine;
 
-namespace Karabaev.Survival.Game.Weapons
+namespace Karabaev.Survival.Game.Weapons.Descriptors
 {
-  [CreateAssetMenu(menuName = "Karabaev/WeaponsRegistry")]
-  public class WeaponsRegistry : ScriptableObject
+  [CreateAssetMenu(menuName = "Karabaev/NewWeapon")]
+  public class WeaponDescriptor : Descriptor
   {
-    [SerializeField]
-    private WeaponDescriptor[] _weapons = null!;
-
-    public IReadOnlyList<WeaponDescriptor> Weapons => _weapons;
-  }
-
-  [Serializable]
-  public record WeaponDescriptor
-  {
-    [field: SerializeField]
-    public string Id { get; private set; } = null!;
-
     [field: SerializeField]
     public Sprite Icon { get; private set; } = null!;
     
