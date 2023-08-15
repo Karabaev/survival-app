@@ -34,6 +34,8 @@ namespace Karabaev.Survival.Game.Location
       foreach(var spawnPoint in View.LootSpawnPoints)
         lootSpawnPoints.Add(new LootSpawnPointModel(spawnPoint.Position, spawnPoint.Descriptor));
 
+      Model.HeroSpawnPosition = View.HeroSpawnPoint.Position;
+      
       Model.LootSpawnPoints = lootSpawnPoints;
       
       return UniTask.WhenAll(obstacleTasks);

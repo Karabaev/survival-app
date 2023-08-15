@@ -101,6 +101,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   <ProjectileSpawnPoint>k__BackingField: {fileID: 6759091238392029659}
   _muzzle: {fileID: 8066941766067663927}
+  <ShotAudioSource>k__BackingField: {fileID: -2862847305130462358}
 --- !u!82 &-2862847305130462358
 AudioSource:
   m_ObjectHideFlags: 0
@@ -157,7 +158,7 @@ AudioSource:
     m_Curve:
     - serializedVersion: 3
       time: 0
-      value: 0
+      value: 1
       inSlope: 0
       outSlope: 0
       tangentMode: 0

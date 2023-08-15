@@ -31,15 +31,9 @@ namespace Karabaev.Survival.Game
 
     protected override async UniTask OnCreatedAsync(Context context)
     {
-      var playerContext = new PlayerEntity.Context(View.transform, Model.Player, context.HeroDescriptor, context.CameraConfig);
-
-      var loadingTasks = new List<UniTask>
-      {
-        CreateChildAsync<PlayerEntity, PlayerEntity.Context>(playerContext),
-        CreateChildAsync<LocationEntity, LocationEntity.Context>(new LocationEntity.Context(View.transform, Model.Location))
-      };
-
-      await UniTask.WhenAll(loadingTasks);
+      await CreateChildAsync<LocationEntity, LocationEntity.Context>(new LocationEntity.Context(View.transform, Model.Location));
+      var playerContext = new PlayerEntity.Context(View.transform, Model.Player, context.HeroDescriptor, Model.Location.HeroSpawnPosition, context.CameraConfig);
+      await CreateChildAsync<PlayerEntity, PlayerEntity.Context>(playerContext);
       
       Model.Player.LootContactFired.Triggered += Model_OnPlayerLootContactFired;
       Model.Player.HeroDied.Triggered += Model_OnPlayerHeroDied;

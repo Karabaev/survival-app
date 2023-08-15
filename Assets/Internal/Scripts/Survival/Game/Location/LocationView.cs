@@ -1,6 +1,7 @@
 ﻿using Karabaev.GameKit.Common.Utils;
 using Karabaev.GameKit.Entities;
 using Karabaev.Survival.Game.Enemy.SpawnPoint;
+using Karabaev.Survival.Game.Hero;
 using Karabaev.Survival.Game.Loot;
 using Karabaev.Survival.Game.Obstacles;
 using Unity.AI.Navigation;
@@ -19,6 +20,8 @@ namespace Karabaev.Survival.Game.Location
     public LootSpawnPointView[] LootSpawnPoints { get; private set; } = null!;
     [field: SerializeField, HideInInspector]
     public EnemySpawnPointView[] EnemySpawnPoints { get; private set; } = null!;
+    [field: SerializeField, HideInInspector]
+    public HeroSpawnPointView HeroSpawnPoint { get; private set; } = null!;
     
     private AsyncOperation? _lastUpdateOperation;
     
@@ -48,6 +51,7 @@ namespace Karabaev.Survival.Game.Location
       Obstacles = GetComponentsInChildren<ObstacleView>();
       LootSpawnPoints = GetComponentsInChildren<LootSpawnPointView>();
       EnemySpawnPoints = GetComponentsInChildren<EnemySpawnPointView>();
+      HeroSpawnPoint = this.RequireComponentInChildren<HeroSpawnPointView>();
     }
   }
 }

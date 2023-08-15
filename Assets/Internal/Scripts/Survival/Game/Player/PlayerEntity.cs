@@ -22,7 +22,7 @@ namespace Karabaev.Survival.Game.Player
 
     protected override async UniTask OnCreatedAsync(Context context)
     {
-      var heroContext = new HeroEntity.Context(View.transform, Model.Hero, context.HeroDescriptor);
+      var heroContext = new HeroEntity.Context(View.transform, Model.Hero, context.HeroDescriptor, context.HeroSpawnPosition);
       var loadingTasks = new List<UniTask>
       {
         CreateChildAsync<GameInputEntity, GameInputEntity.Context>(new GameInputEntity.Context(View.gameObject, Model.Input)),
@@ -180,6 +180,6 @@ namespace Karabaev.Survival.Game.Player
       return UniTask.FromResult(view);
     }
 
-    public record Context(Transform Parent, PlayerModel Model, HeroDescriptor HeroDescriptor, GameCameraConfig CameraConfig);
+    public record Context(Transform Parent, PlayerModel Model, HeroDescriptor HeroDescriptor, Vector3 HeroSpawnPosition, GameCameraConfig CameraConfig);
   }
 }

@@ -5,6 +5,7 @@ using Karabaev.Survival.Game.Hero;
 using Karabaev.Survival.Game.HUD;
 using Karabaev.Survival.Game.Weapons;
 using Karabaev.Survival.Game.Weapons.Descriptors;
+using UnityEngine;
 
 namespace Karabaev.Survival.Game.Player
 {

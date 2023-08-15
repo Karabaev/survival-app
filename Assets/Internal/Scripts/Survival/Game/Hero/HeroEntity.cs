@@ -102,7 +102,7 @@ namespace Karabaev.Survival.Game.Hero
     {
       var view = Object.Instantiate(context.Descriptor.Prefab, context.Parent);
       view.name = "Hero";
-      view.Position = Vector3.zero;
+      view.Position = context.SpawnPosition;
       view.Rotation = Quaternion.identity;
       view.FootStepSounds = context.Descriptor.FootStepSounds;
       view.DamageableModel = context.Model;
@@ -110,6 +110,6 @@ namespace Karabaev.Survival.Game.Hero
       return UniTask.FromResult(view);
     }
 
-    public record Context(Transform Parent, HeroModel Model, HeroDescriptor Descriptor);
+    public record Context(Transform Parent, HeroModel Model, HeroDescriptor Descriptor, Vector3 SpawnPosition);
   }
 }
