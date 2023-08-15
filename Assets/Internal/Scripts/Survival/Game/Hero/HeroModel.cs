@@ -30,7 +30,7 @@ namespace Karabaev.Survival.Game.Hero
     public ReactiveTrigger<string> LootContactFired { get; }
 
     public ReactiveTrigger<Vector3> HitImpactFired { get; }
-
+    
     public HeroModel(ReactiveProperty<WeaponModel> weapon, int maxHp, int currentHp, float moveSpeed, ReactiveTrigger<string> lootContactFired)
     {
       MoveDirection = new ReactiveProperty<Vector2>(Vector2.zero);

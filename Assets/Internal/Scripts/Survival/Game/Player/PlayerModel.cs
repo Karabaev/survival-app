@@ -23,6 +23,8 @@ namespace Karabaev.Survival.Game.Player
     public InventoryModel Inventory { get; }
     
     public ReactiveTrigger<string> LootContactFired { get; }
+    
+    public ReactiveTrigger HeroDied { get; }
 
     public PlayerModel(GameInputModel input, HeroDescriptor heroDescriptor, WeaponDescriptor weaponDescriptor, GameCameraModel camera)
     {
@@ -33,6 +35,7 @@ namespace Karabaev.Survival.Game.Player
       HUD = new HUDModel(Hero.MaxHp, Hero.CurrentHp, ActiveWeapon, Inventory);
       Camera = camera;
       Input = input;
+      HeroDied = new ReactiveTrigger();
     }
   }
 }

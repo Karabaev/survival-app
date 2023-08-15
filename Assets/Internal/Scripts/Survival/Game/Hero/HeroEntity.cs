@@ -41,6 +41,9 @@ namespace Karabaev.Survival.Game.Hero
 
     protected override void OnTick(float deltaTime, GameTime now)
     {
+      if(Model.CurrentHp.Value <= 0)
+        return;
+      
       var direction = Model.MoveDirection.Value;
       
       var direction3D = new Vector3(direction.x, 0f, direction.y);

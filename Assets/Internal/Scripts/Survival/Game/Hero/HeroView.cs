@@ -107,8 +107,12 @@ namespace Karabaev.Survival.Game.Hero
 
     public void Reload() => _animationView.Reload();
 
-    public void Die() => _animationView.Die();
-    
+    public void Die()
+    {
+      _animationView.Die();
+      _characterController.enabled = false;
+    }
+
     public void DrawWeapon() => _animationView.DrawWeapon();
 
     private void OnAnimationStep() => _audioService.PlaySFX(_footStepAudioSource, _footStepSounds.PickRandom());

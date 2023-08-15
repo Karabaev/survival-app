@@ -32,6 +32,8 @@ namespace Karabaev.Survival.Game.Player
       };
       
       await UniTask.WhenAll(loadingTasks);
+
+      Model.Hero.CurrentHp.Changed += Model_OnHeroCurrentHpChanged;
       
       Model.Camera.Target.Value = Model.Hero.HeroObject.Value;
 
@@ -47,6 +49,8 @@ namespace Karabaev.Survival.Game.Player
     
     protected override void OnDisposed()
     {
+      Model.Hero.CurrentHp.Changed -= Model_OnHeroCurrentHpChanged;
+
       Model.Input.FireButtonDownFired.Triggered -= Model_OnFireButtonDownFired;
       Model.Input.FireButtonUpFired.Triggered -= Model_OnFireButtonUpFired;
       Model.Input.ReloadFired.Triggered -= Model_OnReloadFired;
@@ -69,6 +73,15 @@ namespace Karabaev.Survival.Game.Player
 
       if(now >= _reloadFinishTime)
         Reload();
+    }
+
+    private void Model_OnHeroCurrentHpChanged(int oldValue, int newValue)
+    {
+      if(newValue > 0)
+        return;
+
+      Model.Input.Enabled.Value = false;
+      Model.HeroDied.Set();
     }
 
     private void Model_OnFireButtonDownFired() => _shooting = true;

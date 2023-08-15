@@ -14,6 +14,8 @@ namespace Karabaev.Survival.Game.Enemy.SpawnPoint
     public TimeSpan SpawnInterval { get; }
 
     public GameTime NextSpawnTime { get; set; }
+    
+    public bool Enabled { get; set; }
 
     public EnemySpawnPointModel(Vector3 position, EnemyDescriptor descriptor, TimeSpan spawnInterval)
     {
@@ -21,6 +23,7 @@ namespace Karabaev.Survival.Game.Enemy.SpawnPoint
       Descriptor = descriptor;
       SpawnInterval = spawnInterval;
       NextSpawnTime = GameTime.Min;
+      Enabled = true;
     }
   }
 }

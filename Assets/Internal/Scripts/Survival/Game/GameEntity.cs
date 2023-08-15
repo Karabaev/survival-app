@@ -41,8 +41,8 @@ namespace Karabaev.Survival.Game
 
       await UniTask.WhenAll(loadingTasks);
       
-      Model.Player.LootContactFired.Triggered += Model_PlayerLootContactFired;
-      
+      Model.Player.LootContactFired.Triggered += Model_OnPlayerLootContactFired;
+      Model.Player.HeroDied.Triggered += Model_OnPlayerHeroDied;
       Model.Loot.ItemAdded += Model_OnLootAdded;
       Model.Loot.ItemRemoved += Model_OnLootRemoved;
 
@@ -55,11 +55,12 @@ namespace Karabaev.Survival.Game
         Model.Loot.Add(new LootModel(spawnPoint.Position, descriptor));
       }
     }
-
+    
     protected override void OnDisposed()
     {
-      Model.Player.LootContactFired.Triggered -= Model_PlayerLootContactFired;
-      
+      Model.Player.LootContactFired.Triggered -= Model_OnPlayerLootContactFired;
+      Model.Player.HeroDied.Triggered -= Model_OnPlayerHeroDied;
+
       Model.Loot.ItemAdded -= Model_OnLootAdded;
       Model.Loot.ItemRemoved -= Model_OnLootRemoved;
       Model.Enemies.ItemAdded -= Model_OnEnemyAdded;
@@ -70,7 +71,7 @@ namespace Karabaev.Survival.Game
     {
       foreach(var spawnPoint in Model.Location.EnemySpawnPoints)
       {
-        if(now < spawnPoint.NextSpawnTime)
+        if(!spawnPoint.Enabled || now < spawnPoint.NextSpawnTime)
           continue;
 
         Model.Enemies.Add(new EnemyModel(spawnPoint.Descriptor, Model.Player.Hero, spawnPoint.Position));
@@ -78,7 +79,7 @@ namespace Karabaev.Survival.Game
       }
     }
 
-    private void Model_PlayerLootContactFired(string lootId)
+    private void Model_OnPlayerLootContactFired(string lootId)
     {
       var lootModel = Model.Loot.Collection.First(l => l.Id == lootId);
 
@@ -91,6 +92,12 @@ namespace Karabaev.Survival.Game
       };
       
       handler.Invoke(lootModel);
+    }
+
+    private void Model_OnPlayerHeroDied()
+    {
+      Model.Enemies.Collection.ForEach(e => e.Target.Value = null);
+      Model.Location.EnemySpawnPoints.ForEach(s => s.Enabled = false);
     }
 
     private async void Model_OnLootAdded(LootModel newItem, int index)

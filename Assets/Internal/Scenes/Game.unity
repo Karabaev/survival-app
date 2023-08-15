@@ -4313,8 +4313,6 @@ MonoBehaviour:
   - {fileID: 1109578806}
   <EnemySpawnPoints>k__BackingField:
   - {fileID: 2027228330}
-  - {fileID: 0}
-  - {fileID: 0}
 --- !u!1001 &1109578804
 PrefabInstance:
   m_ObjectHideFlags: 0
