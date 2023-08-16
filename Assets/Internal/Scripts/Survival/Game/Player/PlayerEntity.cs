@@ -64,7 +64,7 @@ namespace Karabaev.Survival.Game.Player
 
     protected override void OnTick(float deltaTime, GameTime now)
     {
-      Model.Hero.MoveDirection.Value = Model.Input.MainAxis;
+      Model.Hero.MoveDirection.Value = CalculateHeroMoveDirection();
       Model.Hero.LookDirection.Value = CalculateHeroLookDirection();
 
       var currentWeapon = Model.ActiveWeapon.Value;
@@ -130,6 +130,15 @@ namespace Karabaev.Survival.Game.Player
     {
       _shooting = false;
       _reloadFinishTime = null;
+    }
+
+    private Vector2 CalculateHeroMoveDirection()
+    {
+      var camera = Model.Camera.Camera.Value;
+      var inputAxis = Model.Input.MainAxis;
+
+      var direction = camera.transform.forward * inputAxis.y + camera.transform.right * inputAxis.x;
+      return new Vector2(direction.x, direction.z);
     }
     
     private Vector2 CalculateHeroLookDirection()
