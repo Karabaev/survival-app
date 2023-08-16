@@ -1,6 +1,7 @@
 ﻿using Cysharp.Threading.Tasks;
 using JetBrains.Annotations;
 using Karabaev.GameKit.ForResources;
+using Karabaev.Survival.Game.Configuration;
 using Karabaev.Survival.Game.Enemy.Descriptors;
 using Karabaev.Survival.Game.GameCamera;
 using Karabaev.Survival.Game.Hero;
@@ -27,6 +28,8 @@ namespace Karabaev.Survival.Descriptors
     public ObstaclesRegistry ObstaclesRegistry { get; private set; } = null!;
 
     public GameCameraConfig CameraConfig { get; private set; } = null!;
+    
+    public GameConfig GameConfig { get; private set; } = null!;
 
     public async UniTask InitializeAsync()
     {
@@ -36,6 +39,7 @@ namespace Karabaev.Survival.Descriptors
       EnemiesRegistry = await _resourceService.LoadAsync<EnemiesRegistry>("Descriptors/Enemies/DR_Enemies");
       ObstaclesRegistry = await _resourceService.LoadAsync<ObstaclesRegistry>("Descriptors/Obstacles/DR_Obstacles");
       CameraConfig = await _resourceService.LoadAsync<GameCameraConfig>("Descriptors/DR_CameraConfig");
+      GameConfig = await _resourceService.LoadAsync<GameConfig>("Descriptors/DR_GameConfig");
     }
 
     public DescriptorsAccess(IResourceService resourceService) => _resourceService = resourceService;

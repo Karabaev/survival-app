@@ -7,6 +7,7 @@ using Karabaev.GameKit.Common;
 using Karabaev.GameKit.Common.Utils;
 using Karabaev.GameKit.Entities;
 using Karabaev.Survival.Descriptors;
+using Karabaev.Survival.Game.Configuration;
 using Karabaev.Survival.Game.Enemy;
 using Karabaev.Survival.Game.GameCamera;
 using Karabaev.Survival.Game.Hero;
@@ -32,7 +33,8 @@ namespace Karabaev.Survival.Game
     protected override async UniTask OnCreatedAsync(Context context)
     {
       await CreateChildAsync<LocationEntity, LocationEntity.Context>(new LocationEntity.Context(View.transform, Model.Location));
-      var playerContext = new PlayerEntity.Context(View.transform, Model.Player, context.HeroDescriptor, Model.Location.HeroSpawnPosition, context.CameraConfig);
+      var playerContext = new PlayerEntity.Context(View.transform, Model.Player, context.HeroDescriptor, Model.Location.HeroSpawnPosition, context.CameraConfig,
+        context.GameConfig);
       await CreateChildAsync<PlayerEntity, PlayerEntity.Context>(playerContext);
       
       Model.Player.LootContactFired.Triggered += Model_OnPlayerLootContactFired;
@@ -182,6 +184,6 @@ namespace Karabaev.Survival.Game
       return UniTask.FromResult(view);
     }
 
-    public record Context(HeroDescriptor HeroDescriptor, WeaponDescriptor WeaponDescriptor, GameCameraConfig CameraConfig);
+    public record Context(HeroDescriptor HeroDescriptor, WeaponDescriptor WeaponDescriptor, GameCameraConfig CameraConfig, GameConfig GameConfig);
   }
 }

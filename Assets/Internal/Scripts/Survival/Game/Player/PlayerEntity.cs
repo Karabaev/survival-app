@@ -4,6 +4,7 @@ using JetBrains.Annotations;
 using Karabaev.GameKit.Common;
 using Karabaev.GameKit.Common.Utils;
 using Karabaev.GameKit.Entities;
+using Karabaev.Survival.Game.Configuration;
 using Karabaev.Survival.Game.GameCamera;
 using Karabaev.Survival.Game.GameInput;
 using Karabaev.Survival.Game.Hero;
@@ -179,9 +180,11 @@ namespace Karabaev.Survival.Game.Player
     protected override UniTask<PlayerView> CreateViewAsync(Context context)
     {
       var view = CommonUtils.NewObject<PlayerView>("Player", context.Parent);
+      view.CursorIcon = context.GameConfig.CursorIcon;
       return UniTask.FromResult(view);
     }
 
-    public record Context(Transform Parent, PlayerModel Model, HeroDescriptor HeroDescriptor, Vector3 HeroSpawnPosition, GameCameraConfig CameraConfig);
+    public record Context(Transform Parent, PlayerModel Model, HeroDescriptor HeroDescriptor, Vector3 HeroSpawnPosition, GameCameraConfig CameraConfig,
+      GameConfig GameConfig);
   }
 }

@@ -87,7 +87,7 @@ namespace Karabaev.Survival.Game.Hero
     public RaycastTestViewModel? ShotRaycast()
     {
       var ray = new Ray(_characterController.bounds.center, transform.forward);
-      
+      Debug.DrawRay(ray.origin, ray.direction * 20, Color.green, 1.0f);
       var layerMask = LayerMask.GetMask("Obstacles", "Enemies");
       if(!Physics.Raycast(ray, out var hitInfo, float.MaxValue, layerMask))
         return null;
