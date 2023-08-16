@@ -3,6 +3,7 @@ using JetBrains.Annotations;
 using Karabaev.GameKit.ForResources;
 using Karabaev.Survival.Game.Configuration;
 using Karabaev.Survival.Game.Enemy.Descriptors;
+using Karabaev.Survival.Game.FirstAids;
 using Karabaev.Survival.Game.GameCamera;
 using Karabaev.Survival.Game.Hero;
 using Karabaev.Survival.Game.Loot.Descriptors;
@@ -20,6 +21,8 @@ namespace Karabaev.Survival.Descriptors
     public HeroesRegistry HeroesRegistry { get; private set; } = null!;
 
     public WeaponsRegistry WeaponsRegistry { get; private set; } = null!;
+    
+    public FirstAidsRegistry FirstAidsRegistry { get; private set; } = null!;
 
     public LootRegistry LootRegistry { get; private set; } = null!;
 
@@ -35,6 +38,7 @@ namespace Karabaev.Survival.Descriptors
     {
       HeroesRegistry = await _resourceService.LoadAsync<HeroesRegistry>("Descriptors/DR_Heroes");
       WeaponsRegistry = await _resourceService.LoadAsync<WeaponsRegistry>("Descriptors/Weapons/DR_Weapons");
+      FirstAidsRegistry = await _resourceService.LoadAsync<FirstAidsRegistry>("Descriptors/FirstAids/DR_FirstAids");
       LootRegistry = await _resourceService.LoadAsync<LootRegistry>("Descriptors/Loot/DR_Loot");
       EnemiesRegistry = await _resourceService.LoadAsync<EnemiesRegistry>("Descriptors/Enemies/DR_Enemies");
       ObstaclesRegistry = await _resourceService.LoadAsync<ObstaclesRegistry>("Descriptors/Obstacles/DR_Obstacles");

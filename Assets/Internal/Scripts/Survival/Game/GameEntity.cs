@@ -160,19 +160,23 @@ namespace Karabaev.Survival.Game
 
     private void CollectAmmoLoot(LootModel loot)
     {
-      var weaponDescriptor = _descriptorsAccess.WeaponsRegistry.Values[loot.Descriptor.ItemId];
-      var inventoryWeapon = Model.Player.Inventory.Weapons.Collection.FirstOrDefault(w => w.Descriptor.Id == weaponDescriptor.Id);
+      var inventoryWeapon = Model.Player.Inventory.Weapons.Collection.FirstOrDefault(w => w.Descriptor.Id == loot.Descriptor.ItemId);
 
       if(inventoryWeapon == null)
         return;
 
+      var weaponDescriptor = _descriptorsAccess.WeaponsRegistry.Values[loot.Descriptor.ItemId];
       inventoryWeapon.ReserveAmmo.Value += weaponDescriptor.Magazine;
       Model.Loot.Remove(loot);
     }
 
     private void CollectFirstAid(LootModel loot)
     {
-      Model.Player.Hero.CurrentHp.Value += 100;
+      if(Model.Player.Hero.CurrentHp.Value == Model.Player.Hero.MaxHp)
+        return;
+      
+      var descriptor = _descriptorsAccess.FirstAidsRegistry.Values[loot.Descriptor.ItemId];
+      Model.Player.Hero.CurrentHp.Value += descriptor.HealValue;
       Model.Loot.Remove(loot);
     }
     
