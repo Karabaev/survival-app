@@ -37,7 +37,13 @@ namespace Karabaev.Survival.Game.Hero
     public Vector3 Forward
     {
       get => transform.forward;
-      set => transform.forward = value;
+      set
+      {
+        if(value == transform.forward)
+          return;
+        
+        transform.forward = value;
+      }
     }
 
     public Vector3 Right
@@ -51,19 +57,19 @@ namespace Karabaev.Survival.Game.Hero
       set => _animationView.Velocity = value;
     }
 
-    private WeaponView? _weaponInstance;
-    private AudioClip? _weaponShotSound;
+    private WeaponView _weaponInstance = null!;
     public WeaponDescriptor Weapon
     {
       set
       {
-        if(_weaponInstance != null)
+        if(_weaponInstance)
           _weaponInstance.DestroyObject();
 
         var slot = this.RequireComponentInChild<Transform>(value.SlotName);
         _weaponInstance = Instantiate(value.EquippedPrefab, slot);
         _animationView.Controller = value.AnimatorController;
-        _weaponShotSound = value.ShotSound;
+        _weaponInstance.ShotSound = value.ShotSound;
+        _weaponInstance.BulletProjectilePrefab = value.ProjectilePrefab;
       }
     }
 
@@ -84,26 +90,25 @@ namespace Karabaev.Survival.Game.Hero
 
     public void Move(Vector3 velocity) => _characterController.Move(velocity);
 
-    public RaycastTestViewModel? ShotRaycast()
+    public RaycastTestViewModel? Shoot()
     {
       var ray = new Ray(_characterController.bounds.center, transform.forward);
       var layerMask = LayerMask.GetMask("Obstacles", "Enemies", "Environment");
-      var raycastResult = Physics.Raycast(ray, out var hitInfo, 20.0f, layerMask);
+
+      var raycastResult = Physics.Raycast(ray, out var hitInfo, float.MaxValue, layerMask);
+
       if(!raycastResult)
+      {
+        ShowShoot(ray.direction * 100);
+        return null;
+      }
+
+      ShowShoot(hitInfo.point);
+      
+      if(!hitInfo.collider.TryGetComponent<IDamageableView>(out var target))
         return null;
 
-      var damageableView = hitInfo.collider.RequireComponent<IDamageableView>();
-      return new RaycastTestViewModel(damageableView.DamageableModel, hitInfo.point);
-    }
-    
-    public void Shot()
-    {
-      if(_weaponInstance == null)
-        return;
-      
-      _animationView.RandomShot();
-      _weaponInstance.PlayMuzzleAsync().Forget();
-      _audioService.PlaySFX(_weaponInstance.ShotAudioSource, _weaponShotSound!);
+      return new RaycastTestViewModel(target.DamageableModel, hitInfo.point);
     }
 
     public void Reload() => _animationView.Reload();
@@ -117,6 +122,12 @@ namespace Karabaev.Survival.Game.Hero
     public void DrawWeapon() => _animationView.DrawWeapon();
 
     private void OnAnimationStep() => _audioService.PlaySFX(_footStepAudioSource, _footStepSounds.PickRandom());
+
+    private void ShowShoot(Vector3 hitPosition)
+    {
+      _animationView.RandomShot();
+      _weaponInstance.Shot(hitPosition);
+    }
 
     private void OnTriggerEnter(Collider other)
     {

@@ -80,15 +80,14 @@ namespace Karabaev.Survival.Game.Hero
 
     private void Model_OnShootFired()
     {
-      View.Shot();
-      var raycastResult = View.ShotRaycast();
+      var shootResult = View.Shoot();
       
-      if(!raycastResult.HasValue)
+      if(!shootResult.HasValue)
         return;
 
-      var target = raycastResult.Value.Damageable;
+      var target = shootResult.Value.Damageable;
       target.CurrentHp.Value -= Model.Weapon.Value.Descriptor.Damage;
-      target.HitImpactFired.Set(raycastResult.Value.ContactPosition);
+      target.HitImpactFired.Set(shootResult.Value.ContactPosition);
     }
     
     private void Model_OnHitImpactFired(Vector3 value)

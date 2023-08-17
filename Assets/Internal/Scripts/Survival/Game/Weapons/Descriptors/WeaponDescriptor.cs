@@ -34,6 +34,6 @@ namespace Karabaev.Survival.Game.Weapons.Descriptors
     public AudioClip ShotSound { get; private set; } = null!;
     
     [field: SerializeField]
-    public GameObject ProjectilePrefab { get; private set; } = null!;
+    public TrailRenderer ProjectilePrefab { get; private set; } = null!;
   }
 }

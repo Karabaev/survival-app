@@ -7,27 +7,60 @@ namespace Karabaev.Survival.Game.Weapons
 {
   public class WeaponView : MonoBehaviour
   {
-    [field: SerializeField, HideInInspector]
-    public Transform ProjectileSpawnPoint { get; private set; } = null!;
+    private const float BulletSpeed = 50.0f;
+    private static readonly TimeSpan MuzzleDuration = TimeSpan.FromSeconds(0.1f);
+    
+    [SerializeField, HideInInspector]
+    private Transform _projectileSpawnPoint = null!;
     [SerializeField, HideInInspector]
     private Transform _muzzle = null!;
-    [field: SerializeField, HideInInspector]
-    public AudioSource ShotAudioSource { get; private set; } = null!;
+    [SerializeField, HideInInspector]
+    private AudioSource _shotAudioSource = null!;
 
+    public AudioClip ShotSound { private get; set; } = null!;
+
+    public TrailRenderer BulletProjectilePrefab { private get; set; } = null!;
+    
     private void Awake() => _muzzle.SetActive(false);
 
-    public async UniTaskVoid PlayMuzzleAsync()
+    public void Shot(Vector3 hitPosition)
     {
-      _muzzle.SetActive(true);
-      await UniTask.Delay(TimeSpan.FromSeconds(0.05f));
-      _muzzle.SetActive(false);
+      _shotAudioSource.PlayOneShot(ShotSound);
+      PlayMuzzleAsync().Forget();
+      LaunchBulletAsync(hitPosition).Forget();
     }
 
+    private async UniTaskVoid LaunchBulletAsync(Vector3 hitPosition)
+    {
+      var bullet = Instantiate(BulletProjectilePrefab);
+      bullet.transform.position = _projectileSpawnPoint.position;
+      
+      var startPosition = bullet.transform.position;
+      var distance = Vector3.Distance(startPosition, hitPosition);
+      var distanceLeft = distance;
+      
+      while(distanceLeft > 0.0f)
+      {
+        bullet.transform.position = Vector3.Lerp(startPosition, hitPosition, 1 - distanceLeft / distance);
+        distanceLeft -= Time.deltaTime * BulletSpeed;
+        await UniTask.Yield(Application.exitCancellationToken);
+      }
+      
+      bullet.DestroyObject();
+    }
+
+    private async UniTaskVoid PlayMuzzleAsync()
+    {
+      _muzzle.SetActive(true);
+      await UniTask.Delay(MuzzleDuration, cancellationToken: destroyCancellationToken);
+      _muzzle.SetActive(false);
+    }
+    
     private void OnValidate()
     {
-      ProjectileSpawnPoint = this.RequireComponentInChild<Transform>("ProjectileSpawnPoint");
+      _projectileSpawnPoint = this.RequireComponentInChild<Transform>("ProjectileSpawnPoint");
       _muzzle = this.RequireComponentInChild<Transform>("Muzzle");
-      ShotAudioSource = this.RequireComponent<AudioSource>();
+      _shotAudioSource = this.RequireComponent<AudioSource>();
     }
   }
 }
